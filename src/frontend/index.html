@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>蓝牙心率监测</title>
+</head>
+<body>
+<h1>当前心率: <span id="heart-rate">-- BPM</span></h1>
+<button onclick="startFetching()">获取心率</button>
+<button onclick="stopFetching()">停止获取</button>
+
+<script>
+    function startFetching() {
+        pywebview.api.fetch_heart_rate();
+    }
+
+    function stopFetching() {
+        pywebview.api.stop_fetching();
+    }
+
+    function updateHeartRate(rate) {
+        document.getElementById('heart-rate').innerText = rate;
+    }
+</script>
+</body>
+</html>
