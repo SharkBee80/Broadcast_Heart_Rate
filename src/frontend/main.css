@@ -1,0 +1,98 @@
+* {
+    margin: 0;
+    padding: 0;
+    text-decoration: none;
+    list-style: none;
+    background-repeat: no-repeat;
+}
+
+.choice-box {
+    display: flex;
+    position: relative;
+    width: 700px;
+    height: 500px;
+    margin: 5% auto;
+    justify-content: space-around;
+}
+
+.choice {
+    float: left;
+    width: 16%;
+    height: 100%;
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: column;
+    justify-content: space-around;
+    background-color: #eee;
+    border-radius: 10px;
+    user-select: none;
+}
+
+.choice li {
+    margin: 0;
+    /*border: #000 1px solid;*/
+    height: inherit;
+}
+
+.choice li a {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    color: #000;
+    transition: all 0.2s linear;
+    cursor: pointer;
+    border-radius: 10px;
+}
+
+.choice-con {
+    position: relative;
+    width: 82%;
+    height: 100%;
+}
+
+.choice-con li {
+    display: none;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    border-radius: 10px;
+}
+
+.choice-con li .box {
+    margin: 1%;
+    display: block;
+    width: 98%;
+    height: 98%;
+}
+
+.choice-con li .bg-f {
+    line-height: 500px;
+    text-align: center;
+    font-size: 28px;
+    color: rgba(0, 0, 0, 0.25);
+    position: absolute;
+    width: 100%;
+    pointer-events: none;
+}
+
+.heartrate {
+    text-align: center;
+}
+
+.heartrate button {
+    margin: 10px;
+    background: #eee;
+    border: 1px solid #ccc;
+}
+
+.heartrate button:hover {
+    background: #ddd;
+}
+
+.heartrate .heart-rate {
+    font-size: 30px;
+}

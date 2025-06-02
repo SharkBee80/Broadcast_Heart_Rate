@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HeartRate</title>
+    <link rel="stylesheet" href="main.css">
+    </link>
+</head>
+
+<body>
+    <div class="choice-box">
+        <ul class="choice">
+            <li>
+                <a class="choice-1">主页</a>
+            </li>
+            <li>
+                <a class="choice-2">设备</a>
+            </li>
+            <li>
+                <a class="choice-3">心率</a>
+            </li>
+            <li>
+                <a class="choice-4">设置</a>
+            </li>
+        </ul>
+
+        <ul class="choice-con">
+            <!-- 下面li标签可以添加自己的内容和样式 -->
+            <li id="choice-1" style="background-color: gainsboro">
+                <div class="box">
+                    <h1>主页</h1>
+                </div>
+                <p class="bg-f">我是主页</p>
+            </li>
+            <li id="choice-2" style="background-color: gainsboro;">
+                <div class="box">
+                    <h1>设备</h1>
+                </div>
+                <p class="bg-f">我是设备</p>
+            </li>
+            <li id="choice-3" style="background-color: gainsboro;">
+                <div class="box heartrate">
+                    <h1>当前心率: <span id="heart-rate">-- BPM</span></h1>
+                    <button onclick="startFetching()">获取心率</button>
+                    <button onclick="stopFetching()">停止获取</button>
+                </div>
+                <p class="bg-f">我是心率</p>
+            </li>
+            <li id="choice-4" style="background-color: gainsboro;">
+                <div class="box">
+                    <h1>设置</h1>
+                </div>
+                <p class="bg-f">我是设置</p>
+            </li>
+        </ul>
+    </div>
+</body>
+<script>
+    let choice1 = document.querySelector('#choice-1');
+    choice1.style.display = 'flex';
+
+    const choice = document.querySelector('.choice');
+    let choiceLis = choice.querySelectorAll('li');
+    choiceLis.forEach(function (li) {
+        li.addEventListener('click', function () {
+            if (choice1) {
+                choice1.style.display = 'none';
+            }
+            let aHref = this.querySelector('a').getAttribute('class');
+            let contID = aHref.slice(0);
+            let contDIv = document.getElementById(contID);
+            choice1 = contDIv;
+            contDIv.style.display = 'flex';
+        })
+    })
+
+
+    let choiceAs = document.querySelectorAll('.choice a');
+    console.log(choiceAs);
+    choiceAs.forEach(function (a, index) {
+        a.addEventListener('click', function () {
+            choiceAs.forEach(function (link) {
+                link.style.fontSize = '';
+                link.style.backgroundColor = '#eee';
+                link.style.padding = '0';
+            });
+            this.style.fontSize = '35px';
+            this.style.backgroundColor = 'gainsboro';
+            this.style.padding = '0 calc(100% / 4) 0 0';
+        });
+        // 判断是否是第一个 <a> 标签
+        if (index === 0) {
+            a.style.fontSize = '35px';
+            a.style.backgroundColor = 'gainsboro';
+            a.style.padding = '0 calc(100% / 4) 0 0';
+        }
+    });
+
+</script>
+
+</html>
