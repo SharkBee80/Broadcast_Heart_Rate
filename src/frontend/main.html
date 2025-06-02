@@ -28,19 +28,41 @@
 
         <ul class="choice-con">
             <!-- 下面li标签可以添加自己的内容和样式 -->
-            <li id="choice-1" style="background-color: gainsboro">
+            <!-- 主页 -->
+            <li class="choice-con-li" id="choice-1" style="background-color: gainsboro">
                 <div class="box">
                     <h1>主页</h1>
                 </div>
                 <p class="bg-f">我是主页</p>
             </li>
-            <li id="choice-2" style="background-color: gainsboro;">
-                <div class="box">
+            <!-- 设备 -->
+            <li class="choice-con-li" id="choice-2" style="background-color: gainsboro;">
+                <div class="box device">
                     <h1>设备</h1>
+                    <div class="box2">
+                        <ul id="device-list">
+                            <li>
+                                <a href="#">设备1</a>
+                            </li>
+                            <li>
+                                <a href="#">设备2</a>
+                            </li>
+                        </ul>
+                        <div class="btn-box">
+                            <div class="btn">
+                                <button>刷新</button>
+                            </div>
+                            <div class="btn2">
+                                <button>连接</button>
+                                <button>断开</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <p class="bg-f">我是设备</p>
             </li>
-            <li id="choice-3" style="background-color: gainsboro;">
+            <!-- 心率 -->
+            <li class="choice-con-li" id="choice-3" style="background-color: gainsboro;">
                 <div class="box heartrate">
                     <h1>当前心率: <span id="heart-rate">-- BPM</span></h1>
                     <button onclick="startFetching()">获取心率</button>
@@ -48,7 +70,8 @@
                 </div>
                 <p class="bg-f">我是心率</p>
             </li>
-            <li id="choice-4" style="background-color: gainsboro;">
+            <!-- 设置 -->
+            <li class="choice-con-li" id="choice-4" style="background-color: gainsboro;">
                 <div class="box">
                     <h1>设置</h1>
                 </div>

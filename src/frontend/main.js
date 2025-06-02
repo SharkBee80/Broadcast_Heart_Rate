@@ -1,4 +1,4 @@
-let choice1 = document.querySelector('#choice-1');
+let choice1 = document.querySelector('#choice-2');
 choice1.style.display = 'flex';
 
 const choice = document.querySelector('.choice');
@@ -30,13 +30,17 @@ choiceAs.forEach(function (a, index) {
         this.style.padding = '0 calc(100% / 4) 0 0';
     });
     // 判断是否是第一个 <a> 标签
-    if (index === 0) {
+    if (index === 1) {
         a.style.fontSize = '35px';
         a.style.backgroundColor = 'gainsboro';
         a.style.padding = '0 calc(100% / 4) 0 0';
     }
 });
 
+
+// 设备
+
+// 心率
 function startFetching() {
     pywebview.api.fetch_heart_rate();
 }
