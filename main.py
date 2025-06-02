@@ -14,8 +14,10 @@ if __name__ == '__main__':
         '蓝牙心率监测',
         './src/frontend/main.html',
         # js_api=api,
+        width=816,  # 800 + 16
+        height=642,  # 600 + 28 +16
         resizable=False
     )
     api.init(window)
 
-    webview.start(debug=False, http_server=False, http_port=25432)
+    webview.start(debug=True, http_server=False, http_port=25432)

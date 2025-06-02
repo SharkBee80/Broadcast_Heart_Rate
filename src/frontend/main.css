@@ -4,14 +4,15 @@
     text-decoration: none;
     list-style: none;
     background-repeat: no-repeat;
+    
 }
 
 .choice-box {
     display: flex;
     position: relative;
-    width: 700px;
-    height: 500px;
-    margin: 5% auto;
+    width: 800px;
+    height: 600px;
+    /*margin: 5% auto;*/
     justify-content: space-around;
 }
 
