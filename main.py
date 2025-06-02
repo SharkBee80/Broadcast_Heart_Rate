@@ -44,8 +44,6 @@ class WebUI_api:
         pass
 
     def fetch_heart_rate(self):
-        global _fetch_thread, _fetch_active
-
         if self._fetch_active:
             return  # 防止重复启动
 
@@ -63,7 +61,8 @@ class WebUI_api:
     def stop_fetching(self):
         self._fetch_active = False
         window.evaluate_js(f"updateHeartRate('-- BPM')")
-        self._fetch_thread.join()
+        if self._fetch_thread:
+            self._fetch_thread.join()
 
 
 if __name__ == '__main__':
@@ -75,4 +74,4 @@ if __name__ == '__main__':
         js_api=api,
     )
 
-    webview.start(debug=False, http_server=True, http_port=25432)
+    webview.start(debug=True, http_server=True, http_port=25432)

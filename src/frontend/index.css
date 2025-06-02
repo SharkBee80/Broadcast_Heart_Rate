@@ -1,0 +1,10 @@
+body {
+    text-align: center;
+}
+ button {
+    margin: 10px;
+    background: #eee;
+}
+#heart-rate {
+    font-size: 30px;
+}
