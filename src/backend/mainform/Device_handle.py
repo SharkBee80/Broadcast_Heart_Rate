@@ -165,22 +165,18 @@ class Device_handle:
         """
         断开蓝牙连接。
         """
+        asyncio.run(self.disconnect())
+
+    async def disconnect(self):
         try:
             if self.client and self.client.is_connected:
                 print(f"正在断开蓝牙连接: {self.client.address}")
-                self.disconnect_event.set()
-                asyncio.run(self.disconnect())
-
+                await self.client.disconnect()
                 print(f"蓝牙连接已断开: {self.client.address}")
-
-                self.client = None
             else:
                 print("未连接到任何蓝牙设备。")
         except Exception as e:
             print(f"断开蓝牙连接时发生错误: {e}")
-
-    async def disconnect(self):
-        await self.client.disconnect()
 
 
 if __name__ == '__main__':
