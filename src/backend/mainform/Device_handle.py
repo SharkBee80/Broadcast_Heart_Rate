@@ -104,6 +104,9 @@ class Device_handle:
         """
         连接蓝牙设备。
         """
+        if self.client and self.client.is_connected:
+            print(f"设备 {self._set_device['name']} 已经连接。")
+            return
         if self._set_device:
             print(f"正在连接蓝牙设备: {self._set_device['name']}")
             try:
@@ -119,7 +122,7 @@ class Device_handle:
         client = BleakClient(address)
         if client.is_connected:
             print(f"设备 {address} 已经连接。")
-            return client
+            return
         await client.connect()
         if client.is_connected:
             self.client = client
@@ -171,8 +174,10 @@ class Device_handle:
         try:
             if self.client and self.client.is_connected:
                 print(f"正在断开蓝牙连接: {self.client.address}")
+                self.disconnect_event.set()
                 await self.client.disconnect()
                 print(f"蓝牙连接已断开: {self.client.address}")
+                self.client = None
             else:
                 print("未连接到任何蓝牙设备。")
         except Exception as e:
