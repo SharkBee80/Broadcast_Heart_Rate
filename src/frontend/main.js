@@ -39,6 +39,27 @@ choiceAs.forEach(function (a, index) {
 
 
 // 设备
+function refresh_devices() {
+    pywebview.api.refresh_devices();
+}
+
+function update_devices(devices) {
+    let device_list = document.getElementById('device-list');
+    device_list.innerHTML = '';
+    devices.forEach(device => {
+        let li = document.createElement('li');
+        li.innerText = `${device.name} - ${device.address}`;
+        li.addEventListener('click', function () {
+            let choiceli = document.querySelectorAll('#device-list li');
+            choiceli.forEach(item => {
+                item.style.backgroundColor = '';
+            });
+            li.style.backgroundColor = 'lightblue';
+            pywebview.api.set_device(device);
+        });
+        device_list.appendChild(li);
+    });
+}
 
 // 心率
 function startFetching() {

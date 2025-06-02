@@ -104,10 +104,10 @@
 }
 
 #device-list li {
-    width: 100%;
     display: block;
     cursor: pointer;
     margin: 1%;
+    word-wrap: break-word;
 }
 
 #device-list li:hover {
