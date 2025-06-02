@@ -20,4 +20,4 @@ if __name__ == '__main__':
     )
     api.init(window)
 
-    webview.start(debug=True, http_server=False, http_port=25432)
+    webview.start(debug=False, http_server=False, http_port=25432)
