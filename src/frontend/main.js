@@ -61,6 +61,14 @@ function update_devices(devices) {
     });
 }
 
+function connect_device() {
+    pywebview.api.connect_device();
+}
+
+function disconnect_device() {
+    pywebview.api.disconnect_device();
+}
+
 // 心率
 function startFetching() {
     pywebview.api.fetch_heart_rate();
