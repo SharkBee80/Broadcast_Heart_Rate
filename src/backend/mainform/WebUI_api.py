@@ -4,9 +4,11 @@ import webview
 import threading
 import time
 
+from src.backend.mainform import Device_handle
+ble = Device_handle.Device_handle()
+
 # 模拟蓝牙数据获取函数
 # 心率相关常量
-
 BASE_HEART_RATE = 70  # 基础心率
 RATE_VARIATION = 6  # 每次波动最大幅度
 MIN_HEART_RATE = 40
@@ -45,11 +47,12 @@ class WebUI_api:
 
     def init(self, window):
         self.window = window
+        ble.init(window)
         self.window.expose(self.fetch_heart_rate, self.stop_fetching)
 
     def fetch_heart_rate(self):
         if self._fetch_event.is_set():
-            print( "[INFO] Heart rate fetching already active.")
+            print("[INFO] Heart rate fetching already active.")
             return  # 防止重复启动
 
         self._fetch_event.set()
