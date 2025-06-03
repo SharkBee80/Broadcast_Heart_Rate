@@ -191,8 +191,6 @@ class Device_handle:
         try:
             self.disconnect_thread = threading.Thread(target=self.run_async_disconnect, daemon=True)
             self.disconnect_thread.start()
-            self.disconnect_thread.join()
-            self.disconnect_thread = None
         except Exception as e:
             print(f"断开蓝牙连接时发生错误: {e}")
             return
@@ -208,13 +206,18 @@ class Device_handle:
     async def disconnect(self):
         print(f"正在断开蓝牙连接: {self.client.address}")
         self.disconnect_event.set()
+        self.disconnect_event.clear()
+        # print("停止接收心率数据...")
+        # await self.client.stop_notify(self.heart_rate_char)
 
-        await self.client.stop_notify(self.heart_rate_char)
         await self.client.disconnect()
-
+        print("蓝牙连接已断开")
         self.connect_thread.join()
         print(f"蓝牙连接已断开: {self.client.address}")
         self.client = None
+
+        # self.disconnect_thread.join()
+        # self.disconnect_thread = None
 
 
 if __name__ == '__main__':
