@@ -98,9 +98,10 @@
 }
 
 #device-list {
-    flex: 6;
+    min-width: 60%;
     display: block;
     border: #000 1px solid;
+    
 }
 
 #device-list li {
@@ -115,7 +116,7 @@
 }
 
 .device .box2 .btn-box {
-    flex: 4;
+    min-width: 40%;
     margin: 1%;
     display: flex;
     flex-direction: column;
