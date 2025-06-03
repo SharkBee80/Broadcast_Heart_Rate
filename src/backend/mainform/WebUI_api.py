@@ -1,11 +1,11 @@
 import random
 
-import webview
 import threading
 import time
 
-from src.backend.mainform import Device_handle
-ble = Device_handle.Device_handle()
+from src.backend.mainform.Device_handle import Device_handle
+
+ble = Device_handle()
 
 # 模拟蓝牙数据获取函数
 # 心率相关常量
@@ -48,7 +48,19 @@ class WebUI_api:
     def init(self, window):
         self.window = window
         ble.init(window)
-        self.window.expose(self.fetch_heart_rate, self.stop_fetching)
+        self.window.expose(self.refresh_devices, self.set_device, self.connect_device, self.disconnect_device)
+
+    def refresh_devices(self):
+        ble.refresh_devices()
+
+    def set_device(self, device):
+        ble.set_device(device)
+
+    def connect_device(self):
+        ble.connect_device()
+
+    def disconnect_device(self):
+        ble.disconnect_device()
 
     def fetch_heart_rate(self):
         if self._fetch_event.is_set():
