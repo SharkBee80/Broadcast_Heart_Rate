@@ -1,4 +1,5 @@
 import json
+import threading
 
 from bleak import BleakScanner, BleakClient
 import asyncio
@@ -10,6 +11,7 @@ class Device_handle:
     """
 
     def __init__(self):
+        self.heart_rate_char = None
         self.client = None
         self.heart_rate = None
         self.ble_devices = []
@@ -20,6 +22,8 @@ class Device_handle:
 
         # thread
         self.scan_thread = None
+        self.connect_thread = None
+        self.disconnect_thread = None
 
     def init(self, window):
         self.window = window
@@ -104,18 +108,27 @@ class Device_handle:
         """
         连接蓝牙设备。
         """
-        if self.client and self.client.is_connected:
-            print(f"设备 {self._set_device['name']} 已经连接。")
+        if self.client:
+            print(f"[INFO] 设备 {self._set_device['name']} 已经连接。")
             return
         if self._set_device:
             print(f"正在连接蓝牙设备: {self._set_device['name']}")
             try:
-                asyncio.run(self.connect())
+                self.connect_thread = threading.Thread(target=self.run_async_connect, daemon=True)
+                self.connect_thread.start()
                 print(f"已连接蓝牙设备: {self._set_device['name']}")
             except Exception as e:
                 print(f"连接蓝牙设备时发生错误: {e}")
         else:
             print("请选择要连接的蓝牙设备。")
+
+    def run_async_connect(self):
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
+        try:
+            loop.run_until_complete(self.connect())
+        finally:
+            loop.close()
 
     async def connect(self):
         address = self._set_device['address']
@@ -134,12 +147,13 @@ class Device_handle:
             services = client.services
             # 心率测量特征UUID
             HEART_RATE_MEASUREMENT_UUID = "00002a37-0000-1000-8000-00805f9b34fb"
-            heart_rate_char = services.get_characteristic(HEART_RATE_MEASUREMENT_UUID)
+            self.heart_rate_char = services.get_characteristic(HEART_RATE_MEASUREMENT_UUID)
             # 订阅心率测量特征值
-            if heart_rate_char is None:
+            if self.heart_rate_char is None:
                 print(f"未找到心率测量特征值")
                 return
-            await client.start_notify(heart_rate_char, lambda sender, data: self.notification_handler(sender, data))
+            await self.client.start_notify(self.heart_rate_char,
+                                           lambda sender, data: self.notification_handler(sender, data))
             print("开始接收心率数据...")
             # 保持连接一段时间以接收数据
             # await input_key(disconnect_event)
@@ -168,20 +182,39 @@ class Device_handle:
         """
         断开蓝牙连接。
         """
-        asyncio.run(self.disconnect())
-
-    async def disconnect(self):
+        if self.disconnect_thread and self.disconnect_thread.is_alive():
+            print("[INFO] 已经运行")
+            return
+        if not self.client or not self.client.is_connected:
+            print("未连接到任何蓝牙设备。")
+            return
         try:
-            if self.client and self.client.is_connected:
-                print(f"正在断开蓝牙连接: {self.client.address}")
-                self.disconnect_event.set()
-                await self.client.disconnect()
-                print(f"蓝牙连接已断开: {self.client.address}")
-                self.client = None
-            else:
-                print("未连接到任何蓝牙设备。")
+            self.disconnect_thread = threading.Thread(target=self.run_async_disconnect, daemon=True)
+            self.disconnect_thread.start()
+            self.disconnect_thread.join()
+            self.disconnect_thread = None
         except Exception as e:
             print(f"断开蓝牙连接时发生错误: {e}")
+            return
+
+    def run_async_disconnect(self):
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
+        try:
+            loop.run_until_complete(self.disconnect())
+        finally:
+            loop.close()
+
+    async def disconnect(self):
+        print(f"正在断开蓝牙连接: {self.client.address}")
+        self.disconnect_event.set()
+
+        await self.client.stop_notify(self.heart_rate_char)
+        await self.client.disconnect()
+
+        self.connect_thread.join()
+        print(f"蓝牙连接已断开: {self.client.address}")
+        self.client = None
 
 
 if __name__ == '__main__':
