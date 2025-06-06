@@ -52,6 +52,7 @@ class Device_handle:
         asyncio.set_event_loop(loop)
         try:
             loop.run_until_complete(self.scan_devices())
+            loop.run_until_complete(asyncio.sleep(0.1))  # 给事件处理一点时间
         finally:
             loop.close()
 
@@ -76,6 +77,9 @@ class Device_handle:
         asyncio.set_event_loop(loop)
         try:
             loop.run_until_complete(self.connect())
+            loop.run_until_complete(asyncio.sleep(0.1))  # 给事件处理一点时间
+        except Exception as e:
+            print(f"连接时发生错误: {e}")
         finally:
             loop.close()
 
@@ -114,19 +118,17 @@ class Device_handle:
                 return
             # 解析心率数据（根据BLE规范）
             flags = data[0]
-            if flags & 0x01:  # 16-bit格式
-                heart_rate = int.from_bytes(data[1:3], byteorder='little')
-            else:  # 8-bit格式
-                heart_rate = data[1]
+            heart_rate = int.from_bytes(data[1:3], 'little') if flags & 0x01 else data[1]
 
             print(f"心率: {heart_rate} bpm")
 
         # 查找心率特征值
-        services = await self.client.get_services()
+        services = self.client.services
         heart_rate_char = services.get_characteristic(HEART_RATE_SERVICE_UUID)
 
         if heart_rate_char:
             await self.client.start_notify(heart_rate_char, heart_rate_handler)
+            self.heart_rate_char = heart_rate_char
             await self.disconnect_event.wait()
         else:
             print("未找到心率服务。")
@@ -136,6 +138,7 @@ class Device_handle:
         asyncio.set_event_loop(loop)
         try:
             loop.run_until_complete(self.disconnect())
+            loop.run_until_complete(asyncio.sleep(0.1))  # 给事件处理一点时间
         finally:
             loop.close()
 
@@ -143,18 +146,28 @@ class Device_handle:
         print(f"正在断开蓝牙连接: {self.client.address}")
         """断开当前连接"""
         if self.client and self.client.is_connected:
-            try:
-                # 设置最大等待时间为3秒
-                await asyncio.wait_for(self.client.stop_notify(HEART_RATE_SERVICE_UUID), timeout=3.0)
-            except asyncio.TimeoutError:
-                print("停止通知超时，强制继续执行断开流程")
-
             self.disconnect_event.set()
-            self.disconnect_event = asyncio.Event()
+            try:
+                if self.heart_rate_char:
+                    # 设置最大等待时间为3秒
+                    print("[DEBUG] 正在停止心率通知...")
+                    await self.client.stop_notify(self.heart_rate_char)
+                    print("[DEBUG] 心率通知已停止")
+            except Exception as e:
+                print(f"停止通知时发生错误: {e}")
 
-            await self.client.disconnect()
-            print("已断开连接")
-            print("心率: -- bpm")
+            await asyncio.sleep(1)  # 或其他操作
+
+            try:
+                print('[DEBUG] 正在断开蓝牙连接...')
+                await self.client.disconnect()
+                print("[DEBUG] 已断开蓝牙连接")
+            except Exception as e:
+                print(f"断开连接时发生错误: {e}")
+            finally:
+                print("心率: -- bpm")
+        else:
+            print("未连接蓝牙设备")
 
 
 if __name__ == '__main__':
