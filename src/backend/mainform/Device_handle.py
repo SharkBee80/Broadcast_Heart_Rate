@@ -1,8 +1,13 @@
 import json
+import time
 
 from bleak import BleakScanner, BleakClient
 import asyncio
 from typing import Optional
+
+from qasync import asyncSlot
+import logging
+logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 
 # 心率服务UUID（标准特征值）
 HEART_RATE_SERVICE_UUID = "00002a37-0000-1000-8000-00805f9b34fb"
@@ -26,10 +31,11 @@ class Device_handle:
         self.window = window
         self.window.expose(self.refresh_devices, self.set_device, self.connect_device, self.disconnect_device)
 
+    @asyncSlot()
     async def scan_devices(self):
         """开始扫描蓝牙设备"""
         try:
-            print("[INFO] 开始扫描")
+            logging.info("正在扫描蓝牙设备...")
             devices = await BleakScanner.discover()
             devices_data = []
             for d in devices:
@@ -45,7 +51,7 @@ class Device_handle:
             self.window.evaluate_js(js_code)
 
         except Exception as e:
-            print(f"搜索蓝牙设备时发生错误: {e}")
+            logging.warning(f"扫描时发生错误: {e}")
 
     def refresh_devices(self):
         loop = asyncio.new_event_loop()
@@ -79,48 +85,46 @@ class Device_handle:
             loop.run_until_complete(self.connect())
             loop.run_until_complete(asyncio.sleep(0.1))  # 给事件处理一点时间
         except Exception as e:
-            print(f"连接时发生错误: {e}")
+            logging.warning(f"连接时发生错误: {e}")
         finally:
             loop.close()
 
+    @asyncSlot()
     async def connect(self):
         """连接选定设备"""
         selected = self._set_device
         if not selected:
-            print("[INFO] 未选择任何设备")
+            logging.warning("未选择任何设备")
             return
 
         address = selected['address']
-        print(f"[INFO] 正在连接 {address}...")
+        logging.info(f"正在连接: {address}")
 
         try:
             self.client = BleakClient(address)
             await self.client.connect()
 
             if self.client.is_connected:
-                print(f"已连接: {address}")
+                logging.info(f"已连接: {address}")
 
                 # 启用心率通知
                 await self.enable_heart_rate_notifications()
             else:
-                print(f"连接失败: {address}")
+                logging.warning(f"无法连接: {address}")
 
         except Exception as e:
-            print(f"连接时发生错误: {e}")
+            logging.warning(f"连接时发生错误: {e}")
 
+    @asyncSlot()
     async def enable_heart_rate_notifications(self):
         """启用心率通知"""
 
         def heart_rate_handler(sender, data):
-            loop = asyncio.get_event_loop()
-            if loop.is_closed():
-                print("事件循环已关闭，无法处理心率数据")
-                return
             # 解析心率数据（根据BLE规范）
             flags = data[0]
             heart_rate = int.from_bytes(data[1:3], 'little') if flags & 0x01 else data[1]
 
-            print(f"心率: {heart_rate} bpm")
+            print(f"{time.strftime('%Y-%m-%d %H:%M:%S', time.localtime())} - 心率: {heart_rate} bpm")
 
         # 查找心率特征值
         services = self.client.services
@@ -131,7 +135,7 @@ class Device_handle:
             self.heart_rate_char = heart_rate_char
             await self.disconnect_event.wait()
         else:
-            print("未找到心率服务。")
+            logging.warning("未找到心率服务")
 
     def disconnect_device(self):
         loop = asyncio.new_event_loop()
@@ -142,32 +146,33 @@ class Device_handle:
         finally:
             loop.close()
 
+    @asyncSlot()
     async def disconnect(self):
-        print(f"正在断开蓝牙连接: {self.client.address}")
+        logging.info(f'正在断开蓝牙连接...{self.client.address}')
         """断开当前连接"""
         if self.client and self.client.is_connected:
-            self.disconnect_event.set()
             try:
+                self.disconnect_event.set()
                 if self.heart_rate_char:
                     # 设置最大等待时间为3秒
-                    print("[DEBUG] 正在停止心率通知...")
+                    logging.info('正在停止心率通知...')
                     await self.client.stop_notify(self.heart_rate_char)
-                    print("[DEBUG] 心率通知已停止")
+                    logging.info('已停止心率通知')
             except Exception as e:
-                print(f"停止通知时发生错误: {e}")
+                logging.warning(f"停止心率通知时发生错误: {e}")
 
             await asyncio.sleep(1)  # 或其他操作
 
             try:
-                print('[DEBUG] 正在断开蓝牙连接...')
+                logging.info('正在断开蓝牙连接...')
                 await self.client.disconnect()
-                print("[DEBUG] 已断开蓝牙连接")
+                logging.info('已断开蓝牙连接')
             except Exception as e:
-                print(f"断开连接时发生错误: {e}")
+                logging.warning(f"断开蓝牙连接时发生错误: {e}")
             finally:
                 print("心率: -- bpm")
         else:
-            print("未连接蓝牙设备")
+            logging.info("未连接蓝牙设备")
 
 
 if __name__ == '__main__':
