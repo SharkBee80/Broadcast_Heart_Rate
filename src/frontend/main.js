@@ -1,3 +1,4 @@
+// 选项卡
 let choice1 = document.querySelector('#choice-2');
 choice1.style.display = 'flex';
 
@@ -39,6 +40,16 @@ choiceAs.forEach(function (a, index) {
 
 
 // 设备
+/* 初始 */
+onload = function () {
+        let device_data = [
+        { 'name': 'iQOO WATCH 047', 'address': '88:54:8E:D9:50:47' }, 
+        { 'name': 'EDIFIER BLE', 'address': 'CC:14:BC:B5:14:C7' }, 
+        { 'name': 'AAAAABBBBBCCCCCDDDDDEEEEEFFFFFGGGGG', 'address': 'XX:XX:XX:XX:XX:XX' }
+    ]
+    update_devices(device_data);
+};
+
 function refresh_devices() {
     pywebview.api.refresh_devices();
 }
