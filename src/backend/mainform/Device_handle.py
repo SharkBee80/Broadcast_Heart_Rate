@@ -5,7 +5,6 @@ from bleak import BleakScanner, BleakClient
 import asyncio
 from typing import Optional
 
-from qasync import asyncSlot
 import logging
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s", datefmt="%Y-%m-%d %H:%M:%S")  # 黄色
 # 心率服务UUID（标准特征值）
