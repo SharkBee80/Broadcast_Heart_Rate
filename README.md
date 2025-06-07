@@ -6,10 +6,8 @@
 使用 `pywebview`.`bleak` 模块
 
 ## 图片
-<div style="display: flex;justify-content: space-between;flex-wrap: wrap;">
+<div>
     <img alt="img.png" height="256" src="files/1.png"/>
-    <img alt="img.png" height="256" src="files/2.png"/>
-    <img alt="img.png" height="256" src="files/2.png"/>
     <img alt="img.png" height="256" src="files/2.png"/>
 </div>
 
