@@ -6,9 +6,10 @@
 使用 `pywebview`.`bleak` 模块
 
 ## 图片
-
-<img alt="img.png" height="256" src="files/1.png"/>
-<img alt="img.png" height="256" src="files/2.png"/>
+<div style="display: flex;justify-content: space-between;">
+    <img alt="img.png" height="256" src="files/1.png"/>
+    <img alt="img.png" height="256" src="files/2.png"/>
+</div>
 
 ## 安装
 ### pyinstaller
