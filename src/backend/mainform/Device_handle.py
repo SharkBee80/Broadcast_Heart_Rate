@@ -48,10 +48,10 @@ class Device_handle:
             print(devices_data)
             js_code = f"update_devices({json.dumps(devices_data)})"
             self.window.evaluate_js(js_code)
-            self.window.evaluate_js("ButtonState('refresh_devices',true,'刷新')")
-
         except Exception as e:
             logging.warning(f"扫描时发生错误: {e}")
+        finally:
+            self.window.evaluate_js("ButtonState('refresh_devices',true,'刷新')")
 
     def refresh_devices(self):
         loop = asyncio.new_event_loop()
