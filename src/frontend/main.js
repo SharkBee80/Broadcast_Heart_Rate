@@ -92,6 +92,22 @@ function connect_device() {
     pywebview.api.connect_device();
 }
 
+/* 列表状态 */
+function  ListState(state) {
+    let list = document.getElementById('device-list');
+    
+    switch (state) {
+        case true:
+            list.style.pointerEvents = 'auto';
+            list.style.backgroundColor = '';
+            break;
+        case false:
+            list.style.pointerEvents = 'none';
+            list.style.backgroundColor = 'darkgray'
+            break;
+    }
+}
+
 function disconnect_device() {
     pywebview.api.disconnect_device();
 }

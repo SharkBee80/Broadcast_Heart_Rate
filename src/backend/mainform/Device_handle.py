@@ -109,7 +109,9 @@ class Device_handle:
 
             if self.client.is_connected:
                 logging.info(f"已连接: {address}")
+                '''成功'''
                 self.window.evaluate_js("ButtonState('connect_device',false,'已连接')")
+                self.window.evaluate_js("ListState(false)")
                 self.window.evaluate_js("document.querySelectorAll('.choice a')[2].click()")
                 # 启用心率通知
                 await self.enable_heart_rate_notifications()
@@ -191,6 +193,7 @@ class Device_handle:
             finally:
                 self.client = None
                 self.window.evaluate_js("ButtonState('disconnect_device',true,'断开')")
+                self.window.evaluate_js("ListState(true)")
                 self.window.evaluate_js("ButtonState('connect_device',true,'连接')")
 
                 self.window.evaluate_js(f"updateHeartRate('--')")
