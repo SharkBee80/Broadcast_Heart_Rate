@@ -104,7 +104,8 @@ class Device_handle:
         try:
             self.window.evaluate_js("ButtonState('connect_device',false,'连接中...')")
             self.client = BleakClient(address)
-            await self.client.connect()
+
+            await asyncio.wait_for(self.client.connect(), timeout=5)
 
             if self.client.is_connected:
                 logging.info(f"已连接: {address}")
@@ -117,9 +118,11 @@ class Device_handle:
             else:
                 logging.warning(f"无法连接: {address}")
                 self.window.evaluate_js("ButtonState('connect_device',true,'连接')")
-
+        except asyncio.TimeoutError:
+            logging.warning(f"连接超时: {address}")
         except Exception as e:
             logging.warning(f"连接时发生错误: {e}")
+        finally:
             self.window.evaluate_js("ButtonState('connect_device',true,'连接')")
 
     async def enable_heart_rate_notifications(self):
