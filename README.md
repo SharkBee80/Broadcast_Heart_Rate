@@ -7,7 +7,8 @@
 
 ## 图片
 
-<img alt="img.png" height="400" src="files/img.png"/>
+<img alt="img.png" height="256" src="files/1.png"/>
+<img alt="img.png" height="256" src="files/2.png"/>
 
 ## 安装
 ### pyinstaller
