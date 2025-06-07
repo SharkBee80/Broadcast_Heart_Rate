@@ -44,14 +44,16 @@ choiceAs.forEach(function (a, index) {
 onload = function () {
         let device_data = [
         { 'name': 'iQOO WATCH 047', 'address': '88:54:8E:D9:50:47' }, 
-        { 'name': 'EDIFIER BLE', 'address': 'CC:14:BC:B5:14:C7' }, 
-        { 'name': 'AAAAABBBBBCCCCCDDDDDEEEEEFFFFFGGGGG', 'address': 'XX:XX:XX:XX:XX:XX' }
+        { 'name': 'EXAMPLE BLE', 'address': '12:34:56:78:90:AB' }, 
+        { 'name': 'AAAAABBBBBCCCCCDDDDDEEEEEFFFFFGGGGG', 'address': 'XX:XX:XX:XX:XX:XX' },
+        { 'name': 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA', 'address': 'AA:AA:AA:AA:AA:AA' },
     ]
     update_devices(device_data);
 };
 let selete_device;
 
 function refresh_devices() {
+    selete_device = null;
     pywebview.api.refresh_devices();
 }
 
@@ -98,12 +100,10 @@ function  ListState(state) {
     
     switch (state) {
         case true:
-            list.style.pointerEvents = 'auto';
-            list.style.backgroundColor = '';
+            list.classList.remove('disabled');
             break;
         case false:
-            list.style.pointerEvents = 'none';
-            list.style.backgroundColor = 'darkgray'
+            list.classList.add('disabled');
             break;
     }
 }
