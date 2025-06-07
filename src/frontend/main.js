@@ -49,6 +49,7 @@ onload = function () {
     ]
     update_devices(device_data);
 };
+let selete_device;
 
 function refresh_devices() {
     pywebview.api.refresh_devices();
@@ -57,6 +58,12 @@ function refresh_devices() {
 function update_devices(devices) {
     let device_list = document.getElementById('device-list');
     device_list.innerHTML = '';
+    if  (devices.length === 0) {
+        let li = document.createElement('li');
+        li.innerText = 'No devices found';
+        device_list.appendChild(li);
+        return;
+    }
     devices.forEach(device => {
         let li = document.createElement('li');
         li.innerText = `${device.name} - ${device.address}`;
@@ -65,14 +72,23 @@ function update_devices(devices) {
             choiceli.forEach(item => {
                 item.style.backgroundColor = '';
             });
-            li.style.backgroundColor = 'lightblue';
-            pywebview.api.set_device(device);
+            li.style.backgroundColor = 'lightskyblue';
+            set_device(device);
         });
         device_list.appendChild(li);
     });
 }
 
+function set_device(device) {
+    pywebview.api.set_device(device);
+    selete_device = device;
+}
+
 function connect_device() {
+    if  (!selete_device) {
+        alert('Please select a device first.');
+        return;
+    }
     pywebview.api.connect_device();
 }
 
@@ -80,15 +96,22 @@ function disconnect_device() {
     pywebview.api.disconnect_device();
 }
 
+/* 按钮状态 */
+function  ButtonState(id, state, text) {
+    let btn = document.getElementById(id);
+    switch (state) {
+        case true:
+            btn.disabled = false;
+            btn.innerText = text;
+            break;
+        case false:
+            btn.disabled = true;
+            btn.innerText = text;
+            break;
+    }
+}
+
 // 心率
-function startFetching() {
-    pywebview.api.fetch_heart_rate();
-}
-
-function stopFetching() {
-    pywebview.api.stop_fetching();
-}
-
 function updateHeartRate(rate) {
     document.getElementById('heart-rate').innerText = rate;
 }

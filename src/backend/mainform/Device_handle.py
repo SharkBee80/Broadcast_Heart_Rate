@@ -23,6 +23,7 @@ class Device_handle:
         self._set_device = None
         self.client: Optional[BleakClient] = None
         self.heart_rate_char = None
+        self.heart_rate = None
 
         self.disconnect_event: Optional[asyncio.Event] = asyncio.Event()
 
@@ -33,6 +34,7 @@ class Device_handle:
     async def scan_devices(self):
         """开始扫描蓝牙设备"""
         try:
+            self.window.evaluate_js("ButtonState('refresh_devices',false,'刷新中...')")
             logging.info("正在扫描蓝牙设备...")
             devices = await BleakScanner.discover()
             devices_data = []
@@ -47,6 +49,7 @@ class Device_handle:
             print(devices_data)
             js_code = f"update_devices({json.dumps(devices_data)})"
             self.window.evaluate_js(js_code)
+            self.window.evaluate_js("ButtonState('refresh_devices',true,'刷新')")
 
         except Exception as e:
             logging.warning(f"扫描时发生错误: {e}")
@@ -100,19 +103,23 @@ class Device_handle:
         logging.info(f"正在连接: {address}")
 
         try:
+            self.window.evaluate_js("ButtonState('connect_device',false,'连接中...')")
             self.client = BleakClient(address)
             await self.client.connect()
 
             if self.client.is_connected:
                 logging.info(f"已连接: {address}")
-
+                self.window.evaluate_js("ButtonState('connect_device',false,'已连接')")
+                self.window.evaluate_js("document.querySelectorAll('.choice a')[2].click()")
                 # 启用心率通知
                 await self.enable_heart_rate_notifications()
             else:
                 logging.warning(f"无法连接: {address}")
+                self.window.evaluate_js("ButtonState('connect_device',true,'连接')")
 
         except Exception as e:
             logging.warning(f"连接时发生错误: {e}")
+            self.window.evaluate_js("ButtonState('connect_device',true,'连接')")
 
     async def enable_heart_rate_notifications(self):
         """启用心率通知"""
@@ -120,9 +127,10 @@ class Device_handle:
         def heart_rate_handler(sender, data):
             # 解析心率数据（根据BLE规范）
             flags = data[0]
-            heart_rate = int.from_bytes(data[1:3], 'little') if flags & 0x01 else data[1]
+            self.heart_rate = int.from_bytes(data[1:3], 'little') if flags & 0x01 else data[1]
 
-            print(f"{time.strftime('%Y-%m-%d %H:%M:%S', time.localtime())} - 心率: {heart_rate} bpm")
+            print(f"{time.strftime('%Y-%m-%d %H:%M:%S', time.localtime())} - 心率: {self.heart_rate} bpm")
+            self.window.evaluate_js(f"updateHeartRate({self.heart_rate})")
 
         # 查找心率特征值
         services = self.client.services
@@ -149,6 +157,7 @@ class Device_handle:
 
         if self.client and self.client.is_connected:
             try:
+                self.window.evaluate_js("ButtonState('disconnect_device',false,'断开中...')")
                 # 停止心率通知
                 if self.heart_rate_char:
                     try:
@@ -181,7 +190,10 @@ class Device_handle:
                     await self.force_disconnect()
             finally:
                 self.client = None
-                print("心率: -- bpm")
+                self.window.evaluate_js("ButtonState('disconnect_device',true,'断开')")
+                self.window.evaluate_js("ButtonState('connect_device',true,'连接')")
+
+                self.window.evaluate_js(f"updateHeartRate('--')")
 
         else:
             logging.info("未建立有效连接，无需断开")

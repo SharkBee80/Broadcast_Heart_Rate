@@ -136,7 +136,8 @@
 }
 
 .device .box2 .btn-box button {
-    width: 30%;
+    width: inherit;
+    min-width: 40%;
 }
 
 /* 心率 */

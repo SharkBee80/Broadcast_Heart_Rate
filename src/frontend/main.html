@@ -43,11 +43,11 @@
                         <ul id="device-list"></ul>
                         <div class="btn-box">
                             <div class="btn">
-                                <button onclick="refresh_devices()">刷新</button>
+                                <button id="refresh_devices" onclick="refresh_devices()">刷新</button>
                             </div>
                             <div class="btn2">
-                                <button onclick="connect_device()">连接</button>
-                                <button onclick="disconnect_device()">断开</button>
+                                <button id="connect_device" onclick="connect_device()">连接</button>
+                                <button id="disconnect_device" onclick="disconnect_device()">断开</button>
                             </div>
                         </div>
                     </div>
@@ -57,9 +57,7 @@
             <!-- 心率 -->
             <li class="choice-con-li" id="choice-3" style="background-color: gainsboro;">
                 <div class="box heartrate">
-                    <h1>当前心率: <span id="heart-rate">-- BPM</span></h1>
-                    <button onclick="startFetching()">获取心率</button>
-                    <button onclick="stopFetching()">停止获取</button>
+                    <h1>当前心率: <span id="heart-rate">--</span> BPM</h1>
                 </div>
                 <p class="bg-f">我是心率</p>
             </li>
