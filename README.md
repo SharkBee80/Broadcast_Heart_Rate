@@ -1,5 +1,10 @@
 # Broadcast Heart Rate / 心率广播
 
+## 介绍
+一个用于接收心率广播的Python程序
+
+使用 `pywebview`.`bleak` 模块
+
 ## 图片
 
 <img alt="img.png" height="400" src="files/img.png"/>
