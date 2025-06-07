@@ -13,7 +13,7 @@ pyinstaller HeartRate.spec
 ```
 /
 ```shell
-pyinstaller -F -w --clean --add-data="src;src" --name HeartRate -i heartrate.ico main.py
+pyinstaller -F -w --clean --add-data="src;src" --exclude-module=PyQt5 --name HeartRate -i heartrate.ico main.py
 ```
 ---
 
