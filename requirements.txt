@@ -1,0 +1,2 @@
+bleak~=0.22.3
+pywebview~=5.4
