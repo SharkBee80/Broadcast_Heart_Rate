@@ -1,6 +1,7 @@
 import json
 import time
 
+import webview
 from bleak import BleakScanner, BleakClient
 import asyncio
 from typing import Optional
@@ -17,7 +18,7 @@ class Device_handle:
     """
 
     def __init__(self):
-        self.window = None
+        self.window: Optional[webview.Window] = None
 
         self._set_device = None
         self.client: Optional[BleakClient] = None
@@ -113,6 +114,7 @@ class Device_handle:
                 self.window.evaluate_js("ButtonState('connect_device',false,'已连接')")
                 self.window.evaluate_js("ListState(false)")
                 self.window.evaluate_js("document.querySelectorAll('.choice a')[2].click()")
+                self.window.run_js("startHeartRate(true)")
                 # 启用心率通知
                 await self.enable_heart_rate_notifications()
             else:
@@ -133,8 +135,10 @@ class Device_handle:
             flags = data[0]
             self.heart_rate = int.from_bytes(data[1:3], 'little') if flags & 0x01 else data[1]
 
+            #
+
             print(f"{time.strftime('%Y-%m-%d %H:%M:%S', time.localtime())} - 心率: {self.heart_rate} bpm")
-            self.window.evaluate_js(f"updateHeartRate({self.heart_rate})")
+            self.window.evaluate_js(f"getHeartRate({self.heart_rate})")
 
         # 查找心率特征值
         services = self.client.services
@@ -197,9 +201,7 @@ class Device_handle:
                 self.window.evaluate_js("ButtonState('disconnect_device',true,'断开')")
                 self.window.evaluate_js("ListState(true)")
                 self.window.evaluate_js("ButtonState('connect_device',true,'连接')")
-
-                self.window.evaluate_js(f"updateHeartRate('--')")
-
+                self.window.evaluate_js("startHeartRate(false)")
         else:
             logging.info("未建立有效连接，无需断开")
             await self.force_disconnect()

@@ -163,3 +163,9 @@
 .heartrate .heart-rate {
     font-size: 30px;
 }
+
+canvas#heartRateChart {
+    position: absolute;
+    bottom: 0;
+    margin-bottom: 2%;
+}

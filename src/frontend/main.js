@@ -38,18 +38,21 @@ choiceAs.forEach(function (a, index) {
     }
 });
 
-
-// 设备
 /* 初始 */
 onload = function () {
-        let device_data = [
-        { 'name': 'iQOO WATCH 047', 'address': '88:54:8E:D9:50:47' }, 
-        { 'name': 'EXAMPLE BLE', 'address': '12:34:56:78:90:AB' }, 
+    let device_data = [
+        { 'name': 'iQOO WATCH 047', 'address': '88:54:8E:D9:50:47' },
+        { 'name': 'EXAMPLE BLE', 'address': '12:34:56:78:90:AB' },
         { 'name': 'AAAAABBBBBCCCCCDDDDDEEEEEFFFFFGGGGG', 'address': 'XX:XX:XX:XX:XX:XX' },
         { 'name': 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA', 'address': 'AA:AA:AA:AA:AA:AA' },
     ]
     update_devices(device_data);
+
+    chart_init();
 };
+
+
+// 设备
 let selete_device;
 
 function refresh_devices() {
@@ -60,7 +63,7 @@ function refresh_devices() {
 function update_devices(devices) {
     let device_list = document.getElementById('device-list');
     device_list.innerHTML = '';
-    if  (devices.length === 0) {
+    if (devices.length === 0) {
         let li = document.createElement('li');
         li.innerText = 'No devices found';
         device_list.appendChild(li);
@@ -87,7 +90,7 @@ function set_device(device) {
 }
 
 function connect_device() {
-    if  (!selete_device) {
+    if (!selete_device) {
         alert('Please select a device first.');
         return;
     }
@@ -95,9 +98,9 @@ function connect_device() {
 }
 
 /* 列表状态 */
-function  ListState(state) {
+function ListState(state) {
     let list = document.getElementById('device-list');
-    
+
     switch (state) {
         case true:
             list.classList.remove('disabled');
@@ -113,7 +116,7 @@ function disconnect_device() {
 }
 
 /* 按钮状态 */
-function  ButtonState(id, state, text) {
+function ButtonState(id, state, text) {
     let btn = document.getElementById(id);
     switch (state) {
         case true:
@@ -128,6 +131,28 @@ function  ButtonState(id, state, text) {
 }
 
 // 心率
-function updateHeartRate(rate) {
-    document.getElementById('heart-rate').innerText = rate;
+let heart_rate_status = false;
+let heart_rate;
+let heart_rate_time = 0;
+let heart_rate_interval;
+
+function startHeartRate(state) {
+    heart_rate_status = state;
+    if (heart_rate_status) {
+        heart_rate_interval = setInterval(calc_heart_rate, 1000); // 每秒更新一次
+    } else if (heart_rate_interval) {
+        clearInterval(heart_rate_interval);
+    }
+}
+
+function getHeartRate(rate) {
+    heart_rate = rate;
+    heart_rate_time = Date.now();
+}
+
+function calc_heart_rate() {
+    if (Date.now() - heart_rate_time > 2000) {
+        heart_rate = null;
+    }
+    updateChart(heart_rate);
 }
