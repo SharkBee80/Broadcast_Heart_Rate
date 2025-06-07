@@ -7,8 +7,7 @@ from typing import Optional
 
 from qasync import asyncSlot
 import logging
-logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
-
+logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s", datefmt="%Y-%m-%d %H:%M:%S")  # 黄色
 # 心率服务UUID（标准特征值）
 HEART_RATE_SERVICE_UUID = "00002a37-0000-1000-8000-00805f9b34fb"
 
@@ -31,7 +30,6 @@ class Device_handle:
         self.window = window
         self.window.expose(self.refresh_devices, self.set_device, self.connect_device, self.disconnect_device)
 
-    @asyncSlot()
     async def scan_devices(self):
         """开始扫描蓝牙设备"""
         try:
@@ -89,14 +87,15 @@ class Device_handle:
         finally:
             loop.close()
 
-    @asyncSlot()
     async def connect(self):
         """连接选定设备"""
         selected = self._set_device
         if not selected:
             logging.warning("未选择任何设备")
             return
-
+        if self.client and self.client.is_connected:
+            logging.warning(f"已连接: {self.client.address}")
+            return
         address = selected['address']
         logging.info(f"正在连接: {address}")
 
@@ -115,7 +114,6 @@ class Device_handle:
         except Exception as e:
             logging.warning(f"连接时发生错误: {e}")
 
-    @asyncSlot()
     async def enable_heart_rate_notifications(self):
         """启用心率通知"""
 
@@ -128,11 +126,10 @@ class Device_handle:
 
         # 查找心率特征值
         services = self.client.services
-        heart_rate_char = services.get_characteristic(HEART_RATE_SERVICE_UUID)
+        self.heart_rate_char = services.get_characteristic(HEART_RATE_SERVICE_UUID)
 
-        if heart_rate_char:
-            await self.client.start_notify(heart_rate_char, heart_rate_handler)
-            self.heart_rate_char = heart_rate_char
+        if self.heart_rate_char:
+            await self.client.start_notify(self.heart_rate_char, heart_rate_handler)
             await self.disconnect_event.wait()
         else:
             logging.warning("未找到心率服务")
@@ -146,33 +143,65 @@ class Device_handle:
         finally:
             loop.close()
 
-    @asyncSlot()
     async def disconnect(self):
-        logging.info(f'正在断开蓝牙连接...{self.client.address}')
-        """断开当前连接"""
+        """改进版断开连接方法"""
+        logging.info(f'开始断开蓝牙连接流程...{self.client.address if self.client else "无客户端"}')
+
         if self.client and self.client.is_connected:
             try:
-                self.disconnect_event.set()
+                # 停止心率通知
                 if self.heart_rate_char:
-                    # 设置最大等待时间为3秒
-                    logging.info('正在停止心率通知...')
-                    await self.client.stop_notify(self.heart_rate_char)
-                    logging.info('已停止心率通知')
-            except Exception as e:
-                logging.warning(f"停止心率通知时发生错误: {e}")
+                    try:
+                        logging.info('正在停止心率通知...')
+                        await asyncio.wait_for(
+                            self.client.stop_notify(self.heart_rate_char),
+                            timeout=3.0
+                        )
+                        logging.info('已停止心率通知')
+                        self.heart_rate_char = None
+                    except asyncio.TimeoutError:
+                        logging.warning('停止心率通知超时')
+                    except Exception as e:
+                        logging.warning(f"停止心率通知时发生错误: {e}")
 
-            await asyncio.sleep(1)  # 或其他操作
+                self.disconnect_event.set()
+                self.disconnect_event = asyncio.Event()
+                await asyncio.sleep(0.1)
 
-            try:
-                logging.info('正在断开蓝牙连接...')
-                await self.client.disconnect()
-                logging.info('已断开蓝牙连接')
-            except Exception as e:
-                logging.warning(f"断开蓝牙连接时发生错误: {e}")
+                # 主动断开连接
+                try:
+                    logging.info('正在断开蓝牙连接...')
+                    await asyncio.wait_for(self.client.disconnect(), timeout=3.5)
+                    logging.info('已成功断开蓝牙连接')
+                except asyncio.TimeoutError:
+                    logging.warning('断开连接超时，尝试强制清理')
+                    await self.force_disconnect()
+                except Exception as e:
+                    logging.warning(f"断开蓝牙连接时发生错误: {e}")
+                    await self.force_disconnect()
             finally:
+                self.client = None
                 print("心率: -- bpm")
+
         else:
-            logging.info("未连接蓝牙设备")
+            logging.info("未建立有效连接，无需断开")
+            await self.force_disconnect()
+
+    async def force_disconnect(self):
+        """强制断开连接并清理资源"""
+        if self.client:
+            try:
+                # 尝试获取底层传输并关闭
+                if hasattr(self.client, '_client'):
+                    client_impl = self.client._client
+                    if hasattr(client_impl, '_transport'):
+                        try:
+                            client_impl._transport.close()
+                            logging.debug("已关闭传输层")
+                        except Exception as e:
+                            logging.debug(f"关闭传输层时发生错误: {e}")
+            finally:
+                pass
 
 
 if __name__ == '__main__':
