@@ -1,9 +1,11 @@
 # Broadcast Heart Rate / 心率广播
 
 ## 介绍
-一个用于接收心率广播的Python程序
+一个用于接收心率广播的python程序
 
-使用 `pywebview`.`bleak` 模块
+[https://github.com/SharkBee80/Broadcast_Heart_Rate](https://github.com/SharkBee80/Broadcast_Heart_Rate)
+
+使用 `pywebview`.`bleak`.`flask` 模块
 
 ## 图片
 <div>
