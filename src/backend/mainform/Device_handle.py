@@ -6,6 +6,8 @@ from bleak import BleakScanner, BleakClient
 import asyncio
 from typing import Optional
 
+from src.backend.mainform import server
+
 import logging
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s", datefmt="%Y-%m-%d %H:%M:%S")  # 黄色
 # 心率服务UUID（标准特征值）
@@ -26,6 +28,8 @@ class Device_handle:
         self.heart_rate = None
 
         self.disconnect_event: Optional[asyncio.Event] = asyncio.Event()
+
+        self.ser = server.Server()
 
     def init(self, window):
         self.window = window
@@ -139,6 +143,7 @@ class Device_handle:
 
             print(f"{time.strftime('%Y-%m-%d %H:%M:%S', time.localtime())} - 心率: {self.heart_rate} bpm")
             self.window.evaluate_js(f"getHeartRate({self.heart_rate})")
+            self.ser.set_rate(self.heart_rate)
 
         # 查找心率特征值
         services = self.client.services

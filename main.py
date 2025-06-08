@@ -5,10 +5,12 @@ from src.backend.mainform import WebUI_api
 
 if __name__ == '__main__':
     api = WebUI_api.WebUI_api()
+
+    webview.logger.disabled = True
     # 创建窗口并加载 HTML 页面
     window = webview.create_window(
         '蓝牙心率监测',
-        './src/frontend/main.html',
+        'http://127.0.0.1:25432',
         # js_api=api,
         width=816,  # 800 + 16
         height=642,  # 600 + 28 +16
@@ -17,4 +19,4 @@ if __name__ == '__main__':
 
     api.init(window)
 
-    webview.start(debug=False, http_server=False, http_port=25432)
+    webview.start(debug=True)

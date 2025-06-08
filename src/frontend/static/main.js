@@ -150,9 +150,27 @@ function getHeartRate(rate) {
     heart_rate_time = Date.now();
 }
 
-function calc_heart_rate() {
-    if (Date.now() - heart_rate_time > 2000) {
-        heart_rate = null;
+async function calc_heart_rate() {
+    let timeoutId;
+    try {
+        const controller = new AbortController();
+        timeoutId = setTimeout(() => controller.abort(), 500);
+
+        const response = await fetch('http://127.0.0.1:25432/api', {
+            signal: controller.signal
+        });
+
+        clearTimeout(timeoutId);
+        
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        //{'rate':72}
+        const rate = data.rate;
+        updateChart(rate);
+    } catch (error) {
+        console.error('Failed to fetch rate data:', error);
     }
-    updateChart(heart_rate);
 }
