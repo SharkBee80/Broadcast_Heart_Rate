@@ -18,4 +18,4 @@ if __name__ == '__main__':
 
     api.init(window)
 
-    webview.start(debug=True, gui='edgechromium')
+    webview.start(debug=False, gui='edgechromium')
