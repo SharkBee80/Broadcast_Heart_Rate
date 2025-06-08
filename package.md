@@ -19,6 +19,10 @@ pyinstaller -F -w --clean --add-data="src;src" --exclude-module=PyQt5 --name Hea
 ```shell
 pyinstaller -F --clean --add-data="src;src" --exclude-module=PyQt5 --name HeartRate_with_terminal -i heartrate.ico main.py
 ```
+/
+```shell
+pyinstaller -F -w --clean --add-data="src;src" --exclude-module=PyQt5 --additional-hooks-dir=. --noconfirm --name HeartRate -i heartrate.ico main.py
+```
 ---
 
 * 打包了哪些模块

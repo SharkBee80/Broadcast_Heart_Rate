@@ -41,18 +41,14 @@ class Device_handle:
             self.window.evaluate_js("ButtonState('refresh_devices',false,'刷新中...')")
             logging.info("正在扫描蓝牙设备...")
             devices = await BleakScanner.discover()
-            devices_data = []
-            for d in devices:
-                if d.name is not None:
-                    device_data = {
-                        'name': d.name,
-                        'address': d.address
-                    }
-                    devices_data.append(device_data)
+            devices_data = [
+                {'name': d.name, 'address': d.address}
+                for d in devices
+                if d.name is not None and d.name.strip()
+            ]
             print(f"发现 {len(devices_data)} 个设备")
             print(devices_data)
-            js_code = f"update_devices({json.dumps(devices_data)})"
-            self.window.evaluate_js(js_code)
+            self.window.evaluate_js(f"update_devices({json.dumps(devices_data, ensure_ascii=False)})")
         except Exception as e:
             logging.warning(f"扫描时发生错误: {e}")
         finally:
