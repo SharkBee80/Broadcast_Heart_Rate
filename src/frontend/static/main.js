@@ -136,12 +136,49 @@ let heart_rate;
 let heart_rate_time = 0;
 let heart_rate_interval;
 
+let eventSource;
+let eventSourceTimeout;
+/*
 function startHeartRate(state) {
+    if (typeof state !== 'boolean') {
+        console.warn('Invalid state type, expected boolean');
+        return;
+    }
     heart_rate_status = state;
-    if (heart_rate_status) {
-        heart_rate_interval = setInterval(calc_heart_rate, 1000); // 每秒更新一次
-    } else if (heart_rate_interval) {
+    if (heart_rate_interval) {
         clearInterval(heart_rate_interval);
+        heart_rate_interval = null;
+    }
+    if (heart_rate_status) {
+        heart_rate_interval = setInterval(fetch_heart_rate, 1000); // 每秒更新一次
+    }
+}
+*/
+
+function startHeartRate(state) {
+    if (typeof state !== 'boolean') {
+        console.warn('Invalid state type, expected boolean');
+        return;
+    }
+    heart_rate_status = state;
+    // 清除已有定时器
+    if (eventSourceTimeout) {
+        clearTimeout(eventSourceTimeout);
+        eventSourceTimeout = null;
+    }
+
+    if (heart_rate_status) {
+        if (!eventSource) listen_heart_rate();
+    } else {
+        if (eventSource) {
+            clearTimeout(eventSourceTimeout);
+            eventSourceTimeout = setTimeout(() => {
+                if (eventSource) {
+                    eventSource.close();
+                    eventSource = null;
+                }
+            }, 3000);
+        }
     }
 }
 
@@ -150,27 +187,44 @@ function getHeartRate(rate) {
     heart_rate_time = Date.now();
 }
 
-async function calc_heart_rate() {
+//api
+
+async function fetch_heart_rate() {
     let timeoutId;
     try {
         const controller = new AbortController();
         timeoutId = setTimeout(() => controller.abort(), 500);
 
-        const response = await fetch('http://127.0.0.1:25432/api', {
+        const response = await fetch('/api', {
             signal: controller.signal
         });
 
         clearTimeout(timeoutId);
-        
+
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
 
         const data = await response.json();
         //{'rate':72}
-        const rate = data.rate;
+        const rate = JSON.parse(data).rate;
         updateChart(rate);
     } catch (error) {
         console.error('Failed to fetch rate data:', error);
+    }
+}
+
+//sse
+function listen_heart_rate() {
+    eventSource = new EventSource('/sse');
+
+    eventSource.onmessage = function (event) {
+        const data = JSON.parse(event.data);
+        //"{\"rate\": 71, \"time\": \"22:45:32\"}"
+        const rate = data.rate
+        updateChart(rate);
+    };
+    eventSource.onerror = function (error) {
+        console.error('Failed to receive rate data:', error);
     }
 }
