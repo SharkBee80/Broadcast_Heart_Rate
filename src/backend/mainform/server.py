@@ -1,6 +1,7 @@
 import threading
 import time
 from flask import Flask, render_template, jsonify, send_from_directory
+from flask_cors import CORS
 
 import config
 
@@ -18,6 +19,9 @@ class Server:
 
     def __init__(self):
         self.app = Flask(__name__, static_folder=self.static_folder, template_folder=self.template_folder)
+
+        # r'/*' 是通配符，让本服务器所有的 URL 都允许跨域请求
+        CORS(self.app, resources=r'/*')
 
         self.app.add_url_rule('/', 'root', self.root)
         self.app.add_url_rule('/main', 'main', self.main)
