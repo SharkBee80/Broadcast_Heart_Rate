@@ -22,8 +22,9 @@ const heartRateChart = new Chart(ctx, {
             borderColor: 'rgb(255, 99, 132)',
             backgroundColor: 'rgba(255, 99, 132, 0.1)',
             borderWidth: 2,
-            tension: 0.1,
-            fill: true
+            tension: 0.5,  // 增加这个值使曲线更平滑 (0-1之间)
+            fill: true,
+            cubicInterpolationMode: 'monotone'  // 使用单调插值模式
         }]
     },
     options: {
@@ -32,7 +33,7 @@ const heartRateChart = new Chart(ctx, {
             y: {
                 beginAtZero: false,
                 suggestedMin: 40,
-                suggestedMax: 140,
+                suggestedMax: 120,
                 title: {
                     display: true,
                     text: '心率 (BPM)'
