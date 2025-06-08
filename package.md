@@ -11,9 +11,13 @@ pip install pyinstaller
 ```shell
 pyinstaller HeartRate.spec
 ```
-/
+/ 无终端
 ```shell
-pyinstaller -F -w --clean --add-data="src;src" --exclude-module=PyQt5 --name HeartRate -i heartrate.ico main.py
+pyinstaller -F -w --clean --add-data="src;src" --exclude-module=PyQt5 --name HeartRate_w -i heartrate.ico main.py
+```
+/ 终端
+```shell
+pyinstaller -F --clean --add-data="src;src" --exclude-module=PyQt5 --name HeartRate -i heartrate.ico main.py
 ```
 ---
 
