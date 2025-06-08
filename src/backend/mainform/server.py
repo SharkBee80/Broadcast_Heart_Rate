@@ -62,7 +62,7 @@ class Server:
         self.old_time = time.time()
 
     def calc_rate(self):
-        if time.time() - self.old_time > 3:
+        if time.time() - self.old_time > 5:
             return ''
         return self.rate
 
