@@ -1,6 +1,6 @@
 import threading
 import time
-from flask import Flask, render_template, jsonify
+from flask import Flask, render_template, jsonify, send_from_directory
 
 import config
 
@@ -11,26 +11,45 @@ log.disabled = True
 
 port = config.API['port']
 
+
 class Server:
     static_folder = '../../frontend/static'
-    template_folder = '../../frontend'
+    template_folder = '../../frontend/template'
 
     def __init__(self):
         self.app = Flask(__name__, static_folder=self.static_folder, template_folder=self.template_folder)
 
-        self.app.add_url_rule('/', 'hello', self.hello)
+        self.app.add_url_rule('/', 'root', self.root)
+        self.app.add_url_rule('/main', 'main', self.main)
         self.app.add_url_rule('/api', 'api', self.api)
+
+        self.app.add_url_rule('/<path:filename>', 'html', self.html)
+
+        self.app.register_error_handler(404, self.page_not_found)
 
         self.rate = None
         self.old_time = 0
 
         self.run()
 
-    def hello(self):
+    '''route'''
+
+    def root(self):
+        return render_template('index.html')
+
+    def main(self):
         return render_template('main.html')
 
     def api(self):
         return jsonify({'rate': self.calc_rate()})
+
+    def html(self, filename):
+        return send_from_directory(self.template_folder, filename)
+
+    def page_not_found(self, error):
+        return jsonify({'error': '404'}), 404
+
+    '''function'''
 
     def set_rate(self, rate):
         self.rate = rate
