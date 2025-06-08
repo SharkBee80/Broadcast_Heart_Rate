@@ -7,6 +7,8 @@ import config
 
 import logging
 
+from src.backend.mainform.get_path import get_path
+
 log = logging.getLogger('werkzeug')
 log.disabled = True
 
@@ -14,8 +16,8 @@ port = config.API['port']
 
 
 class Server:
-    static_folder = '../../frontend/static'
-    template_folder = '../../frontend/template'
+    static_folder = get_path('src/frontend/static')
+    template_folder = get_path('src/frontend/template')
 
     def __init__(self):
         self.app = Flask(__name__, static_folder=self.static_folder, template_folder=self.template_folder)
