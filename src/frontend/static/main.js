@@ -268,7 +268,6 @@ function createCards(items) {
         copyButton.textContent = '复制';
         copyButton.addEventListener('click', () => {
             clipboard.writeText(url);
-            alert('已复制到剪贴板');
         });
 
         const openButton = document.createElement('div');

@@ -7,6 +7,11 @@
 
 }
 
+html {
+    height: 600px;
+    width: 800px;
+}
+
 .choice-box {
     display: flex;
     position: relative;
@@ -228,7 +233,7 @@ canvas#heartRateChart {
 }
 
 .button:hover {
-    background-color: #e9e9e9;
+    background-color: #ffffff;
 }
 
 .button.copy {
