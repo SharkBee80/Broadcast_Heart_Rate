@@ -22,6 +22,9 @@ const heartRateChart = new Chart(ctx, {
             borderColor: 'rgb(255, 99, 132)',
             backgroundColor: 'rgba(255, 99, 132, 0.1)',
             borderWidth: 2,
+            
+            pointRadius: 0,
+
             tension: 0.5,  // 增加这个值使曲线更平滑 (0-1之间)
             fill: true,
             cubicInterpolationMode: 'monotone'  // 使用单调插值模式
@@ -73,7 +76,7 @@ function updateChart(rate) {
     const newRate = rate;
 
     // 添加新数据
-    heartRateData.push(newRate ? newRate : 0);
+    heartRateData.push(newRate < 40 ? 40 : newRate);
     labels.push(new Date().toLocaleTimeString());
 
     // 如果数据点超过最大值，移除最旧的数据
