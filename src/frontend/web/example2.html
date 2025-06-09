@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title></title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="">
+    <style>
+        html,
+        body {
+            width: 256px;
+            height: 256px;
+            margin: 0;
+        }
+
+        .box {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #heart-rate {
+            font-size: 32px;
+            font-family: fantasy;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="box">
+        <a id="heart-rate">--</a>
+    </div>
+    <script>
+        onload = function () {
+            setInterval(fetch_heart_rate, 1000); // 每秒更新一次
+        }
+        const heartRateElement = document.getElementById('heart-rate');
+
+        async function fetch_heart_rate() {
+            let timeoutId;
+            try {
+                const controller = new AbortController();
+                timeoutId = setTimeout(() => controller.abort(), 500);
+
+                const response = await fetch('/api', {
+                    signal: controller.signal
+                });
+
+                clearTimeout(timeoutId);
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                //{'rate':72}
+                const rate = JSON.parse(data).rate;
+                update_(rate);
+            } catch (error) {
+                console.error('Failed to fetch rate data:', error);
+            }
+        }
+
+        function update_(rate) {
+            if (rate === null || rate === undefined || rate === '') {
+                rate = '--';
+            }
+            heartRateElement.textContent = rate;
+        }
+    </script>
+</body>
+
+</html>
