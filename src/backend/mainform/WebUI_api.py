@@ -62,6 +62,9 @@ class WebUI_api:
     def disconnect_device(self):
         ble.disconnect_device()
 
+    def on_closed(self):
+        ble.disconnect_device()
+
     def fetch_heart_rate(self):
         if self._fetch_event.is_set():
             print("[INFO] Heart rate fetching already active.")

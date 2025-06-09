@@ -16,6 +16,8 @@ if __name__ == '__main__':
         resizable=False
     )
 
+    window.events.closed += api.on_closed
+
     api.init(window)
 
     webview.start(debug=False, gui='edgechromium')
