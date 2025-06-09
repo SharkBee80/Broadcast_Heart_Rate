@@ -125,6 +125,7 @@ class Device_handle:
         except Exception as e:
             logging.warning(f"连接时发生错误: {e}")
         finally:
+            time.sleep(0.5)
             self.window.evaluate_js("ButtonState('connect_device',true,'连接')")
 
     async def enable_heart_rate_notifications(self):
@@ -184,12 +185,12 @@ class Device_handle:
 
                 self.disconnect_event.set()
                 self.disconnect_event = asyncio.Event()
-                await asyncio.sleep(0.1)
+                time.sleep(0.1)
 
                 # 主动断开连接
                 try:
                     logging.info('正在断开蓝牙连接...')
-                    await asyncio.wait_for(self.client.disconnect(), timeout=3.5)
+                    await asyncio.wait_for(self.client.disconnect(), timeout=4)
                     logging.info('已成功断开蓝牙连接')
                 except asyncio.TimeoutError:
                     logging.warning('断开连接超时，尝试强制清理')
