@@ -228,3 +228,71 @@ function listen_heart_rate() {
         console.error('Failed to receive rate data:', error);
     }
 }
+
+// 页面
+// 示例数据
+const items = [
+    { name: '项目1', imageUrl: 'http://127.0.0.1:25432/web/1.png' },
+    { name: '项目2', imageUrl: 'https://via.placeholder.com/150' },
+    { name: '项目3', imageUrl: 'https://via.placeholder.com/150' },
+    { name: '项目4', imageUrl: 'https://via.placeholder.com/150' },
+    { name: '项目5', imageUrl: 'https://via.placeholder.com/150' },
+    { name: '项目6', imageUrl: 'https://via.placeholder.com/150' }
+];
+
+function createCards() {
+    const container = document.getElementById('card-container');
+
+    // 为每个项目创建卡片
+    items.forEach(item => {
+        const card = document.createElement('div');
+        card.className = 'square-card';
+
+        // 图片部分
+        const imageDiv = document.createElement('div');
+        imageDiv.className = 'image-container';
+
+        const img = document.createElement('img');
+        img.src = item.imageUrl;
+        img.alt = item.name;
+        imageDiv.appendChild(img);
+
+        // 名字部分
+        const nameDiv = document.createElement('div');
+        nameDiv.className = 'name';
+        nameDiv.textContent = item.name;
+
+        // 按钮部分
+        const buttonsDiv = document.createElement('div');
+        buttonsDiv.className = 'buttons';
+
+        const copyButton = document.createElement('div');
+        copyButton.className = 'button copy';
+        copyButton.textContent = '复制';
+        copyButton.addEventListener('click', () => {
+            alert(`已复制 ${item.name}`);
+            // 实际应用中这里可以添加复制功能
+        });
+
+        const openButton = document.createElement('div');
+        openButton.className = 'button open';
+        openButton.textContent = '打开';
+        openButton.addEventListener('click', () => {
+            alert(`正在打开 ${item.name}`);
+            // 实际应用中这里可以添加打开功能
+        });
+
+        buttonsDiv.appendChild(copyButton);
+        buttonsDiv.appendChild(openButton);
+
+        // 组装卡片
+        card.appendChild(imageDiv);
+        card.appendChild(nameDiv);
+        card.appendChild(buttonsDiv);
+
+        // 添加到容器
+        container.appendChild(card);
+    });
+}
+
+createCards();

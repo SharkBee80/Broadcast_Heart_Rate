@@ -3,9 +3,10 @@ import random
 import threading
 import time
 
-from src.backend.mainform.Device_handle import Device_handle
+from src.backend.mainform import Device_handle, Web_page
 
-ble = Device_handle()
+ble = Device_handle.Device_handle()
+web = Web_page.Web_page()
 
 # 模拟蓝牙数据获取函数
 # 心率相关常量
@@ -48,6 +49,7 @@ class WebUI_api:
     def init(self, window):
         self.window = window
         ble.init(window)
+        web.init(window)
         self.window.expose(self.refresh_devices, self.set_device, self.connect_device, self.disconnect_device)
 
     def refresh_devices(self):

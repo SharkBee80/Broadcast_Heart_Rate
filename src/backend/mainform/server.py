@@ -19,6 +19,7 @@ port = config.API['port']
 class Server:
     static_folder = get_path('src/frontend/static')
     template_folder = get_path('src/frontend/template')
+    web_folder = get_path('src/frontend/web')
 
     def __init__(self):
         self.app = Flask(__name__, static_folder=self.static_folder, template_folder=self.template_folder)
@@ -34,6 +35,7 @@ class Server:
         self.app.add_url_rule('/sse', 'sse', self.sse)
         '''path'''
         self.app.add_url_rule('/<path:filename>', 'html', self.html)
+        self.app.add_url_rule('/web/<path:filename>', 'web', self.web)
 
         self.app.register_error_handler(404, self.page_not_found)
 
@@ -71,6 +73,9 @@ class Server:
 
     def html(self, filename):
         return send_from_directory(self.template_folder, filename)
+
+    def web(self, filename):
+        return send_from_directory(self.web_folder, filename)
 
     def page_not_found(self, error):
         return jsonify({'error': '404'}), 404
