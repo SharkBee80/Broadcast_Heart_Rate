@@ -42,13 +42,15 @@ choiceAs.forEach(function (a, index) {
 onload = function () {
     let device_data = [
         { 'name': 'iQOO WATCH 047', 'address': '88:54:8E:D9:50:47' },
-        { 'name': 'EXAMPLE BLE', 'address': '12:34:56:78:90:AB' },
-        { 'name': 'AAAAABBBBBCCCCCDDDDDEEEEEFFFFFGGGGG', 'address': 'XX:XX:XX:XX:XX:XX' },
-        { 'name': 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA', 'address': 'AA:AA:AA:AA:AA:AA' },
+        //{ 'name': 'EXAMPLE BLE', 'address': '12:34:56:78:90:AB' },
+        //{ 'name': 'AAAAABBBBBCCCCCDDDDDEEEEEFFFFFGGGGG', 'address': 'XX:XX:XX:XX:XX:XX' },
+        //{ 'name': 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA', 'address': 'AA:AA:AA:AA:AA:AA' },
     ]
     update_devices(device_data);
 
     chart_init();
+
+    this.setTimeout(() =>pywebview.api.onload_init(), 100);
 };
 
 
@@ -230,21 +232,16 @@ function listen_heart_rate() {
 }
 
 // 页面
-// 示例数据
-const items = [
-    { name: '项目1', imageUrl: 'http://127.0.0.1:25432/web/1.png' },
-    { name: '项目2', imageUrl: 'https://via.placeholder.com/150' },
-    { name: '项目3', imageUrl: 'https://via.placeholder.com/150' },
-    { name: '项目4', imageUrl: 'https://via.placeholder.com/150' },
-    { name: '项目5', imageUrl: 'https://via.placeholder.com/150' },
-    { name: '项目6', imageUrl: 'https://via.placeholder.com/150' }
-];
-
-function createCards() {
+function createCards(items) {
     const container = document.getElementById('card-container');
+    container.innerHTML = '';
 
     // 为每个项目创建卡片
     items.forEach(item => {
+        const host = window.location.origin; //  获取当前页面的域名
+        const url = host + '/web/'+item.html;
+        const image = host + '/web/'+item.image;
+
         const card = document.createElement('div');
         card.className = 'square-card';
 
@@ -253,7 +250,7 @@ function createCards() {
         imageDiv.className = 'image-container';
 
         const img = document.createElement('img');
-        img.src = item.imageUrl;
+        img.src = image;
         img.alt = item.name;
         imageDiv.appendChild(img);
 
@@ -270,16 +267,15 @@ function createCards() {
         copyButton.className = 'button copy';
         copyButton.textContent = '复制';
         copyButton.addEventListener('click', () => {
-            alert(`已复制 ${item.name}`);
-            // 实际应用中这里可以添加复制功能
+            clipboard.writeText(url);
+            alert('已复制到剪贴板');
         });
 
         const openButton = document.createElement('div');
         openButton.className = 'button open';
         openButton.textContent = '打开';
         openButton.addEventListener('click', () => {
-            alert(`正在打开 ${item.name}`);
-            // 实际应用中这里可以添加打开功能
+            pywebview.api.open_in_browser(url);
         });
 
         buttonsDiv.appendChild(copyButton);
@@ -295,4 +291,6 @@ function createCards() {
     });
 }
 
-createCards();
+function set_html_files(files) {
+    createCards(files);
+}
