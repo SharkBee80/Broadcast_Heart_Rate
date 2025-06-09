@@ -9,7 +9,9 @@ from typing import Optional
 from src.backend.mainform import server
 
 import logging
-logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s", datefmt="%Y-%m-%d %H:%M:%S")  # 黄色
+
+logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s",
+                    datefmt="%Y-%m-%d %H:%M:%S")  # 黄色
 # 心率服务UUID（标准特征值）
 HEART_RATE_SERVICE_UUID = "00002a37-0000-1000-8000-00805f9b34fb"
 

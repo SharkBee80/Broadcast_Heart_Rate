@@ -50,7 +50,7 @@ onload = function () {
 
     chart_init();
 
-    this.setTimeout(() =>pywebview.api.onload_init(), 100);
+    this.setTimeout(() => pywebview.api.onload_init(), 100);
 };
 
 
@@ -239,8 +239,8 @@ function createCards(items) {
     // 为每个项目创建卡片
     items.forEach(item => {
         const host = window.location.origin; //  获取当前页面的域名
-        const url = host + '/web/'+item.html;
-        const image = host + '/web/'+item.image;
+        const url = host + '/web/' + item.html;
+        const image = host + '/web/' + item.image;
 
         const card = document.createElement('div');
         card.className = 'square-card';

@@ -31,7 +31,7 @@ class Server:
         self.app.add_url_rule('/main', 'main', self.main)
         '''api'''
         self.app.add_url_rule('/api', 'api', self.api)
-        
+
         self.app.add_url_rule('/sse', 'sse', self.sse)
         '''path'''
         self.app.add_url_rule('/<path:filename>', 'html', self.html)
@@ -96,7 +96,7 @@ class Server:
         j = {
             "rate": a[0],
             "time": time.strftime('%H:%M:%S'),
-            "OK":  a[1]
+            "OK": a[1]
         }
         return json.dumps(j)
 
