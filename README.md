@@ -34,8 +34,8 @@ pyinstaller HeartRate.spec
 pyinstaller -F -w --clean --add-data="src;src" --name HeartRate -i heartrate.ico main.py
 ```
 
-## Lisense
+## [LICENSE](LICENSE)
 * [GPL-3.0](https://opensource.org/license/gpl-3-0)
 <div>
-    <img width="300" src="files/licenses.png">
+    <img width="512" src="files/licenses.png">
 </div>
