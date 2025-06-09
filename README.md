@@ -11,6 +11,7 @@
 <div>
     <img alt="img.png" height="256" src="files/1.png"/>
     <img alt="img.png" height="256" src="files/2.png"/>
+    <img alt="img.png" height="256" src="files/3.png"/>
 </div>
 
 ## 安装
@@ -34,4 +35,7 @@ pyinstaller -F -w --clean --add-data="src;src" --name HeartRate -i heartrate.ico
 ```
 
 ## Lisense
-* MIT
+* [GPL-3.0](https://opensource.org/license/gpl-3-0)
+<div>
+    <img width="300" src="files/licenses.png">
+</div>
