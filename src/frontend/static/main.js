@@ -232,6 +232,10 @@ function listen_heart_rate() {
 }
 
 // 页面
+function set_html_files(files) {
+    createCards(files);
+}
+
 function createCards(items) {
     const container = document.getElementById('card-container');
     container.innerHTML = '';
@@ -267,7 +271,9 @@ function createCards(items) {
         copyButton.className = 'button copy';
         copyButton.textContent = '复制';
         copyButton.addEventListener('click', () => {
-            clipboard.writeText(url);
+            navigator.clipboard.writeText(url)
+                .then(() => alert("已复制: " + url))
+                .catch(err => alert("复制失败：" + err));
         });
 
         const openButton = document.createElement('div');
@@ -288,8 +294,4 @@ function createCards(items) {
         // 添加到容器
         container.appendChild(card);
     });
-}
-
-function set_html_files(files) {
-    createCards(files);
 }
