@@ -265,7 +265,7 @@ function createCards(items) {
                 item.style.outline = '';
             });
             card.style.outline = '1px solid darkgreen';
-            set_device(url);
+            set_url(url);
         });
 
         // 名字部分
@@ -304,8 +304,10 @@ function createCards(items) {
         // 添加到容器
         container.appendChild(card);
     });
+
+    // 填充空白
     if (items.length % 5 !== 0) {
-        for (let i = 0; i < 25 - items.length % 5; i++) {
+        for (let i = 0; i < 5 - items.length % 5; i++) {
             let card = document.createElement('div');
             card.classList.add('square-card');
             //card.style.boxShadow = '0 0 0 rgba(0, 0, 0, 0)';
