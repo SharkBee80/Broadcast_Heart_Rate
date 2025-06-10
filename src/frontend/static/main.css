@@ -10,6 +10,7 @@
 html {
     height: 600px;
     width: 800px;
+    overflow: hidden;
 }
 
 .choice-box {
@@ -175,26 +176,30 @@ canvas#heartRateChart {
 .page .box2 {
     display: flex;
     flex-wrap: wrap;
-    gap: 20px;
+    gap: 10px 20px;
     overflow-y: auto;
     align-content: flex-start;
     z-index: 0;
+    position: relative;
+    justify-content: space-evenly;
 }
 
 .square-card {
-    width: 109px;
+    width: 103px;
     /* 宽109 %5 */
-    height: 134px;
+    height: 128px;
+    padding: 1px;
     border: 1px solid #ddd;
     border-radius: 8px;
     overflow: hidden;
     display: flex;
     flex-direction: column;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    margin: 1px;
 }
 
 .image-container {
-    height: 109px;
+    height: 103px;
     overflow: hidden;
     display: flex;
     align-items: center;
@@ -207,6 +212,8 @@ canvas#heartRateChart {
     max-width: 100%;
     max-height: 100%;
     object-fit: cover;
+    -webkit-user-drag: none;
+    cursor: pointer;
 }
 
 .name {

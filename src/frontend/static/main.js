@@ -231,7 +231,7 @@ function listen_heart_rate() {
     }
 }
 
-// 页面
+// 网页
 function set_html_files(files) {
     createCards(files);
 }
@@ -246,6 +246,7 @@ function createCards(items) {
         const url = host + '/web/' + item.html;
         const image = host + '/web/' + item.image;
 
+        // 创建卡片元素
         const card = document.createElement('div');
         card.className = 'square-card';
 
@@ -257,6 +258,15 @@ function createCards(items) {
         img.src = image;
         img.alt = item.name;
         imageDiv.appendChild(img);
+
+        imageDiv.addEventListener('click', function () {
+            const cards = container.querySelectorAll('.square-card')
+            cards.forEach(item => {
+                item.style.outline = '';
+            });
+            card.style.outline = '1px solid darkgreen';
+            set_device(url);
+        });
 
         // 名字部分
         const nameDiv = document.createElement('div');
@@ -294,4 +304,17 @@ function createCards(items) {
         // 添加到容器
         container.appendChild(card);
     });
+    if (items.length % 5 !== 0) {
+        for (let i = 0; i < 25 - items.length % 5; i++) {
+            let card = document.createElement('div');
+            card.classList.add('square-card');
+            //card.style.boxShadow = '0 0 0 rgba(0, 0, 0, 0)';
+            container.appendChild(card);
+        }
+    }
+}
+
+// 浮窗
+function set_url(url) {
+    pywebview.api.set_url(url);
 }

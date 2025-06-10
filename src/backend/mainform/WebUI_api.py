@@ -3,10 +3,11 @@ import random
 import threading
 import time
 
-from src.backend.mainform import Device_handle, Web_page
+from src.backend.mainform import Device_handle, Web_page, Float_window
 
 ble = Device_handle.Device_handle()
 web = Web_page.Web_page()
+float_window = Float_window.FloatWindow()
 
 
 class WebUI_api:
@@ -22,6 +23,8 @@ class WebUI_api:
         self.window = window
         ble.init(window)
         web.init(window)
+        float_window.init(window)
+
         self.window.expose(self.refresh_devices, self.set_device, self.connect_device, self.disconnect_device,
                            self.onload_init, self.open_in_browser)
 
@@ -42,6 +45,9 @@ class WebUI_api:
 
     def open_in_browser(self, url):
         web.open_in_browser(url)
+
+    def set_url(self, url):
+        float_window.set_url(url)
 
     def on_closed(self):
         ble.disconnect_device()
