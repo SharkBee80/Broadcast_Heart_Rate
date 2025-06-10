@@ -12,6 +12,7 @@
     <img alt="img.png" height="256" src="files/1.png"/>
     <img alt="img.png" height="256" src="files/2.png"/>
     <img alt="img.png" height="256" src="files/3.png"/>
+    <img alt="img.png" height="256" src="files/obs.png">
 </div>
 
 ## 安装
