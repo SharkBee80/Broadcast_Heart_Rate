@@ -1,8 +1,3 @@
-import random
-
-import threading
-import time
-
 from src.backend.mainform import Device_handle, Web_page, Float_window
 
 ble = Device_handle.Device_handle()
