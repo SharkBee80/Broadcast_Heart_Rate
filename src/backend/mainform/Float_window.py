@@ -32,12 +32,9 @@ class FloatWindow:
                 on_top=True,
                 resizable=False,
             )
+            self.float.events.closed += self.close
 
     def close(self):
         if self.float:
             self.float.destroy()
-
-
-if __name__ == '__main__':
-    print("不要运行这个文件")
-    pass
+            self.float = None
