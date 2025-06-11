@@ -19,7 +19,9 @@ class FloatWindow:
     def open(self):
         if self.url:
             if self.float:
-                self.float.destroy()
+                # self.float.destroy()
+                self.float.load_url(self.url)
+                return
             print(f"{time.strftime('%Y-%m-%d %H:%M:%S', time.localtime())} - 悬浮窗: {self.url}")
             self.float = webview.create_window(
                 '悬浮窗',
