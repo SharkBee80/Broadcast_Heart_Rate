@@ -17,19 +17,17 @@
         .main {
             display: flex;
             flex-direction: column;
-            width: 15%;
+            width: 100%;
         }
 
         .l {
             display: flex;
             align-items: center;
             /* 垂直居中 */
-            gap: 10px;
-            /* 元素间距 */
         }
 
         .l a {
-            min-width: 100%;
+            min-width: 25%;
             /* 保持链接宽度一致 */
         }
     </style>
@@ -58,7 +56,16 @@
             <a>随状态更新</a>
         </div>
     </div>
-    <script src=""></script>
+    <script>
+        //href 新窗口打开
+        document.querySelectorAll('a').forEach(function (a) {
+            a.onclick = function () {
+                window.open(this.href);
+                return false;
+            }
+        })
+        
+    </script>
 </body>
 
 </html>
