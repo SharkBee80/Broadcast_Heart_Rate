@@ -26,7 +26,7 @@ class WebUI_api:
         float_window.init(window)
 
         self.window.expose(self.refresh_devices, self.set_device, self.connect_device, self.disconnect_device,
-                           self.onload_init, self.open_in_browser)
+                           self.onload_init, self.open_in_browser, self.set_url)
 
     def refresh_devices(self):
         ble.refresh_devices()
@@ -51,3 +51,4 @@ class WebUI_api:
 
     def on_closed(self):
         ble.disconnect_device()
+        float_window.close()
