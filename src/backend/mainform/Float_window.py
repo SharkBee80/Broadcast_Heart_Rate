@@ -1,13 +1,14 @@
 import time
+from typing import Optional
 
 import webview
 
 
 class FloatWindow:
     def __init__(self):
-        self.window = None
+        self.window: Optional[webview.Window] = None
         self.url = None
-        self.float = None
+        self.float: Optional[webview.Window] = None
         self.floatable = False
 
     def init(self, window):
@@ -44,7 +45,6 @@ class FloatWindow:
             self.float = None
 
     def switch_toggle(self, switch_name, switch_state):
-        print(switch_name, switch_state)
         if switch_name == 'on':
             if switch_state:
                 self.floatable = True
