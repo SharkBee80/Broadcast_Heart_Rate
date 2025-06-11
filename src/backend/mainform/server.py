@@ -32,7 +32,8 @@ class Server:
         '''api'''
         self.app.add_url_rule('/api', 'api', self.api)
 
-        self.app.add_url_rule('/sse', 'sse', self.sse)
+        self.app.add_url_rule('/sse1', 'sse1', self.sse1)
+        self.app.add_url_rule('/sse2', 'sse2', self.sse2)
         '''path'''
         self.app.add_url_rule('/<path:filename>', 'html', self.html)
         self.app.add_url_rule('/web/<path:filename>', 'web', self.web)
@@ -41,6 +42,7 @@ class Server:
 
         self.rate = None
         self.old_time = 0
+        self.data_condition = threading.Condition()
 
         self.run()
 
@@ -55,11 +57,28 @@ class Server:
     def api(self):
         return jsonify(self.json_out())
 
-    def sse(self):
+    def sse1(self):
         def event_stream():
             while True:
                 yield f"data: {self.json_out()}\n\n"
                 time.sleep(1)
+
+        return Response(
+            event_stream(),
+            mimetype='text/event-stream',
+            headers={
+                'Cache-Control': 'no-cache',
+                'Connection': 'keep-alive',
+                'X-Accel-Buffering': 'no'
+            }
+        )
+
+    def sse2(self):
+        def event_stream():
+            while True:
+                with self.data_condition:
+                    self.data_condition.wait()
+                    yield f"data: {self.json_out()}\n\n"
 
         return Response(
             event_stream(),
@@ -83,8 +102,11 @@ class Server:
     '''function'''
 
     def set_rate(self, rate):
-        self.rate = rate
-        self.old_time = time.time()
+        with self.data_condition:
+            if rate != self.rate:
+                self.data_condition.notify_all()
+            self.old_time = time.time()
+            self.rate = rate
 
     def calc_rate(self):
         if time.time() - self.old_time > 5:

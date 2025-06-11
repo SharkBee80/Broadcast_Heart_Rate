@@ -23,12 +23,15 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            color: #e74c3c;
+            font-size: 64px;
+        }
+        #heartRateIco { 
+            margin-bottom: 10px;
         }
 
-        #heart-rate {
-            font-size: 64px;
+        #heartRateNum {
             font-family: fantasy;
-            color: #e74c3c;
         }
 
         @keyframes heartbeat {
@@ -53,24 +56,28 @@
             }
         }
 
-        #heart-rate.animate {
-            animation: heartbeat 0.6s ease-in-out;
+        .animate {
+            animation: heartbeat 1s ease-in-out;
         }
     </style>
 </head>
 
 <body>
     <div class="box">
-        <a id="heart-rate">--</a>
+        <a id="heartRateIco">❤</a>
+        <a>&nbsp;</a>
+        <a id="heartRateNum">--</a>
     </div>
     <script>
         onload = function () {
             listen_heart_rate();
         }
-        const heartRateElement = document.getElementById('heart-rate');
+
+        const heartRateIco = document.getElementById('heartRateIco');
+        const heartRateNum = document.getElementById('heartRateNum');
 
         function listen_heart_rate() {
-            eventSource = new EventSource('/sse');
+            eventSource = new EventSource('/sse1');
 
             eventSource.onmessage = function (event) {
                 const data = JSON.parse(event.data);
@@ -87,13 +94,14 @@
             if (rate === null || rate === undefined || rate === '') {
                 rate = '--';
             }
-            heartRateElement.textContent = '❤' + rate;
-
-            // 添加动画类
-            heartRateElement.classList.remove('animate');
-            void heartRateElement.offsetWidth; // 触发重绘，重新执行动画
-            heartRateElement.classList.add('animate');
+            heartRateNum.textContent = rate;
         }
+        setInterval(function () {
+            // 添加动画类
+            heartRateIco.classList.remove('animate');
+            void heartRateNum.offsetWidth; // 触发重绘，重新执行动画
+            heartRateIco.classList.add('animate');
+        }, 1000);
     </script>
 </body>
 

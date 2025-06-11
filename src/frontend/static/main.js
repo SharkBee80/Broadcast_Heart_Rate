@@ -218,7 +218,7 @@ async function fetch_heart_rate() {
 
 //sse
 function listen_heart_rate() {
-    eventSource = new EventSource('/sse');
+    eventSource = new EventSource('/sse1');
 
     eventSource.onmessage = function (event) {
         const data = JSON.parse(event.data);

@@ -13,14 +13,50 @@
             margin: 0 auto;
             padding: 5px;
         }
+
+        .main {
+            display: flex;
+            flex-direction: column;
+            width: 15%;
+        }
+
+        .l {
+            display: flex;
+            align-items: center;
+            /* 垂直居中 */
+            gap: 10px;
+            /* 元素间距 */
+        }
+
+        .l a {
+            min-width: 100%;
+            /* 保持链接宽度一致 */
+        }
     </style>
 </head>
 
 <body>
-    <div class="">
-        <a href="/main">Home</a>
-        <a href="/api">API</a>
-        <a href="/sse">SSE</a>
+    <div class="main">
+        <div class="l">
+            <a href="/main">Home</a>
+            <a>主页</a>
+            <a>无法交互</a>
+        </div>
+        <div class="l">
+            <a href="/api">API</a>
+            <a>api</a>
+            <a>单次获取</a>
+        </div>
+        <div class="l">
+            <a href="/sse1">SSE1</a>
+            <a>server-sent-events</a>
+            <a>每秒更新一次</a>
+        </div>
+        <div class="l">
+            <a href="/sse2">SSE2</a>
+            <a>server-sent-events</a>
+            <a>随状态更新</a>
+        </div>
     </div>
     <script src=""></script>
 </body>
