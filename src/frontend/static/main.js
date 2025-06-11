@@ -320,3 +320,13 @@ function createCards(items) {
 function set_url(url) {
     pywebview.api.set_url(url);
 }
+
+const switchs = document.querySelectorAll('.switch input[type="checkbox"]');
+switchs.forEach(switch_ => {
+    switch_.addEventListener('click', function () {
+        switch_toggle(switch_.id, switch_.checked);
+    });
+});
+function switch_toggle(switch_name, switch_state) {
+    pywebview.api.switch_toggle(switch_name, switch_state);
+}

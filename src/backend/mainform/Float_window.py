@@ -8,16 +8,18 @@ class FloatWindow:
         self.window = None
         self.url = None
         self.float = None
+        self.floatable = False
 
     def init(self, window):
         self.window = window
+        self.window.expose(self.set_url, self.switch_toggle)
 
     def set_url(self, url):
         self.url = url
         self.open()
 
     def open(self):
-        if self.url:
+        if self.url and self.floatable:
             if self.float:
                 # self.float.destroy()
                 self.float.load_url(self.url)
@@ -32,9 +34,20 @@ class FloatWindow:
                 on_top=True,
                 resizable=False,
             )
-            self.float.events.closed += self.close
+            self.float.events.closed += self.on_closed
+        elif self.float:
+            self.float.destroy()
 
-    def close(self):
+    def on_closed(self):
         if self.float:
             self.float.destroy()
             self.float = None
+
+    def switch_toggle(self, switch_name, switch_state):
+        print(switch_name, switch_state)
+        if switch_name == 'on':
+            if switch_state:
+                self.floatable = True
+            else:
+                self.floatable = False
+            self.open()
