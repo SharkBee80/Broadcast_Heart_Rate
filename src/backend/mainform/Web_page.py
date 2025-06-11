@@ -1,6 +1,5 @@
 import json
 import os
-import webbrowser
 
 from src.backend.mainform.get_path import get_path
 
@@ -41,9 +40,6 @@ class Web_page:
                 images = image_file
                 break
         return images
-
-    def open_in_browser(self, url):
-        webbrowser.open(url)
 
 
 if __name__ == "__main__":

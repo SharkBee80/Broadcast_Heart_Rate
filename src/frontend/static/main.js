@@ -290,7 +290,7 @@ function createCards(items) {
         openButton.className = 'button open';
         openButton.textContent = '打开';
         openButton.addEventListener('click', () => {
-            pywebview.api.open_in_browser(url);
+            window.open(url);
         });
 
         buttonsDiv.appendChild(copyButton);
