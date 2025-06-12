@@ -28,12 +28,14 @@ class FloatWindow:
             print(f"{time.strftime('%Y-%m-%d %H:%M:%S', time.localtime())} - 悬浮窗: {self.url}")
             self.float = webview.create_window(
                 '悬浮窗',
+                x=0,
+                y=1080 - 256 - 50,
                 width=272,  # 256 + 16
                 height=297,  # 256 + 16 + 25
                 url=self.url,
                 frameless=True,
                 on_top=True,
-                resizable=False,
+                transparent=True,
             )
             self.float.events.closed += self.on_closed
         elif not self.floatable and self.float:
