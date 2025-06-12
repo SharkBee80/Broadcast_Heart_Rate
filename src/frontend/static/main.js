@@ -352,5 +352,4 @@ function setting_save() {
         { 'section': 'float', 'option': 'open', 'value': document.getElementById('float_open').checked },
     ]
     pywebview.api.save_setting(settings);
-    alert('保存成功\n请重新启动软件');
 }

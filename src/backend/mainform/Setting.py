@@ -12,7 +12,7 @@ cfg = config.WriteConfig()
 class Setting:
     def __init__(self):
         self.window: Optional[webview.Window] = None
-        
+
     def init(self, window):
         self.window = window
         self.window.expose(self.save_setting)
@@ -29,5 +29,11 @@ class Setting:
 
     def save_setting(self, value_json):
         for _json in value_json:
-            print(_json['section'], _json['option'], _json['value'])
+            # print(_json['section'], _json['option'], _json['value'])
             cfg.set_options(_json['section'], _json['option'], _json['value'].__str__())
+        JS_ = """
+            alert('保存成功\\n请重新启动软件');
+            //var x = confirm('保存成功\\n请重新启动软件');
+            //if (x == true) {pywebview.api.reboot();}
+        """
+        self.window.evaluate_js(JS_)

@@ -2,7 +2,7 @@ import webview
 
 from src.backend.mainform import WebUI_api, config
 
-port = config.get_config('server', 'port')
+port = config.get_config('server', 'port') or 25432
 
 if __name__ == '__main__':
     webview.logger.disabled = True
