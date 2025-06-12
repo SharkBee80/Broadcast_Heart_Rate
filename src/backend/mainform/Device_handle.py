@@ -29,13 +29,22 @@ class Device_handle:
         self.heart_rate_char = None
         self.heart_rate = None
 
-        self.disconnect_event: Optional[asyncio.Event] = asyncio.Event()
+        self.disconnect_event: Optional[asyncio.Event] = None
 
         self.ser = server.Server()
 
     def init(self, window):
         self.window = window
         self.window.expose(self.refresh_devices, self.set_device, self.connect_device, self.disconnect_device)
+
+    def refresh_devices(self):
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
+        try:
+            loop.run_until_complete(self.scan_devices())
+            loop.run_until_complete(asyncio.sleep(0.1))  # 给事件处理一点时间
+        finally:
+            loop.close()
 
     async def scan_devices(self):
         """开始扫描蓝牙设备"""
@@ -55,27 +64,6 @@ class Device_handle:
             logging.warning(f"扫描时发生错误: {e}")
         finally:
             self.window.evaluate_js("ButtonState('refresh_devices',true,'刷新')")
-
-    def refresh_devices(self):
-        loop = asyncio.new_event_loop()
-        asyncio.set_event_loop(loop)
-        try:
-            loop.run_until_complete(self.scan_devices())
-            loop.run_until_complete(asyncio.sleep(0.1))  # 给事件处理一点时间
-        finally:
-            loop.close()
-
-    def refresh_device(self):
-        # 构造可序列化的设备列表
-        devices_data = [
-            {'name': 'iQOO WATCH 047', 'address': '88:54:8E:D9:50:47'},
-            {'name': 'EDIFIER BLE', 'address': 'CC:14:BC:B5:14:C7'},
-            {'name': 'AAAAABBBBBCCCCCDDDDDEEEEEFFFFFGGGGGHHHHH', 'address': 'AA:AA:AA:AA:AA:AA'}
-        ]
-
-        # 使用 json.dumps 确保 JS 可以正确解析
-        js_code = f"update_devices({json.dumps(devices_data)})"
-        self.window.evaluate_js(js_code)
 
     def set_device(self, device):
         self._set_device = device
@@ -106,7 +94,7 @@ class Device_handle:
 
         try:
             self.window.evaluate_js("ButtonState('connect_device',false,'连接中...')")
-            self.client = BleakClient(address)
+            self.client = BleakClient(address, disconnected_callback=self.disconnected_callback, timeout=5)
 
             await asyncio.wait_for(self.client.connect(), timeout=5)
 
@@ -118,17 +106,21 @@ class Device_handle:
                 self.window.evaluate_js("document.querySelectorAll('.choice a')[2].click()")
                 self.window.run_js("startHeartRate(true)")
                 # 启用心率通知
+                self.disconnect_event = asyncio.Event()
                 await self.enable_heart_rate_notifications()
             else:
                 logging.warning(f"无法连接: {address}")
                 self.window.evaluate_js("ButtonState('connect_device',true,'连接')")
         except asyncio.TimeoutError:
             logging.warning(f"连接超时: {address}")
+            self.window.evaluate_js("ButtonState('connect_device',true,'连接')")
         except Exception as e:
             logging.warning(f"连接时发生错误: {e}")
-        finally:
-            time.sleep(0.5)
             self.window.evaluate_js("ButtonState('connect_device',true,'连接')")
+
+    def disconnected_callback(self, client):
+        logging.info("Disconnected callback called!")
+        self.disconnect_event.clear()
 
     async def enable_heart_rate_notifications(self):
         """启用心率通知"""
@@ -186,13 +178,12 @@ class Device_handle:
                         logging.warning(f"停止心率通知时发生错误: {e}")
 
                 self.disconnect_event.set()
-                self.disconnect_event = asyncio.Event()
-                time.sleep(0.1)
+                await asyncio.sleep(0.1)
 
                 # 主动断开连接
                 try:
                     logging.info('正在断开蓝牙连接...')
-                    await asyncio.wait_for(self.client.disconnect(), timeout=4)
+                    await asyncio.wait_for(self.client.disconnect(),  timeout=5)
                     logging.info('已成功断开蓝牙连接')
                 except asyncio.TimeoutError:
                     logging.warning('断开连接超时，尝试强制清理')
