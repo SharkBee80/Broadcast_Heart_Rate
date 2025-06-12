@@ -4,16 +4,16 @@ import time
 from flask import Flask, render_template, jsonify, send_from_directory, Response
 from flask_cors import CORS
 
-import config
-
 import logging
 
-from src.backend.mainform.get_path import get_path
+from src.backend.mainform import get_path, config
 
 log = logging.getLogger('werkzeug')
 log.disabled = True
 
-port = config.API['port']
+get_path = get_path.get_path
+host = config.get_config('server', 'host')
+port = config.get_config('server', 'port')
 
 
 class Server:
@@ -125,10 +125,10 @@ class Server:
     def run(self):
         server_thread = threading.Thread(target=self.app_run, daemon=True)
         server_thread.start()
-        print(f'Server started at: \n * http://127.0.0.1:{port}')
+        print(f'Server started at: \n * http://{host}:{port}')
 
     def app_run(self):
-        self.app.run('0.0.0.0', port)
+        self.app.run(host, port)
 
 
 if __name__ == '__main__':
