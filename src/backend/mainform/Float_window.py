@@ -1,7 +1,7 @@
 import time
 from typing import Optional
-
 import webview
+from src.backend.mainform import config
 
 
 class FloatWindow:
@@ -9,7 +9,7 @@ class FloatWindow:
         self.window: Optional[webview.Window] = None
         self.url = None
         self.float: Optional[webview.Window] = None
-        self.floatable = False
+        self.floatable = config.get_config('float', 'open')
 
     def init(self, window):
         self.window = window
@@ -36,7 +36,7 @@ class FloatWindow:
                 resizable=False,
             )
             self.float.events.closed += self.on_closed
-        elif self.float:
+        elif not self.floatable and self.float:
             self.float.destroy()
 
     def on_closed(self):
@@ -45,7 +45,7 @@ class FloatWindow:
             self.float = None
 
     def switch_toggle(self, switch_name, switch_state):
-        if switch_name == 'on':
+        if switch_name == 'open':
             if switch_state:
                 self.floatable = True
             else:

@@ -39,7 +39,7 @@
                 <div class="box">
                     <h1>主页</h1>
                     <div class="box2">
-                        <iframe  src="/" width="100%" height="100%" frameborder="0"></iframe>
+                        <iframe src="/" width="100%" height="100%" frameborder="0"></iframe>
                     </div>
                 </div>
                 <p class="bg-f">我是主页</p>
@@ -87,7 +87,7 @@
                     <h1>浮窗</h1>
                     <div class="box2">
                         <div class="switch">
-                            <input class="switch-box" type="checkbox" id="on">
+                            <input class="switch-box" type="checkbox" id="open">
                             <label for="switch-box">悬浮窗</label>
                         </div>
                         <div class="switch">
@@ -108,10 +108,29 @@
             </li>
             <!-- 设置 -->
             <li class="choice-con-li" id="choice-6" style="background-color: gainsboro;">
-                <div class="box">
-                    <h1>设置</h1>
+                <div class="box set">
+                    <div class="box_">
+                        <h1>设置</h1>
+                        <div class="btn">
+                            <button onclick="setting_save()">保存</button>
+                        </div>
+                    </div>
+
                     <div class="box2">
-                        
+                        <h3>服务器</h3>
+                        <div class="box3">
+                            <a for="server_host">地址</a>
+                            <input type="text" id="server_host" placeholder="请输入服务器地址"></input>
+                        </div>
+                        <div class="box3">
+                            <a for="server_port">端口</a>
+                            <input type="text" id="server_port" placeholder="请输入服务器端口"></input>
+                        </div>
+                        <h3>浮窗</h3>
+                        <div class="box3 switch">
+                            <input class="switch-box" type="checkbox" id="float_open">
+                            <label for="switch-box">悬浮窗</label>
+                        </div>
                     </div>
                 </div>
                 <p class="bg-f">我是设置</p>

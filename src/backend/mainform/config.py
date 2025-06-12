@@ -57,7 +57,7 @@ class WriteConfig:
     def __init__(self):
         self.filename = config_path
         self.cf = configparser.ConfigParser()
-        self.cf.read(self.filename)  # 如果修改，则必须读原文件
+        self.cf.read(self.filename,  encoding="utf-8")  # 如果修改，则必须读原文件
 
     def _with_file(self):
         # write to file

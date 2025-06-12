@@ -317,3 +317,37 @@ canvas#heartRateChart {
     font-size: 16px;
     margin: 4px;
 }
+
+/* 设置 */
+.set .box_ {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.set .box_ .btn {
+    margin-right: 1%;
+    display: flex;
+    justify-content: flex-end;
+    width: 30%;
+}
+
+.set .box_ .btn button {
+    width: inherit;
+    min-width: 40%;
+}
+
+
+.set .box2 {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    overflow-y: auto;
+}
+
+.set .box2 .box3 {
+    margin: 5px 0 0 5px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}

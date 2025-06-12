@@ -324,9 +324,33 @@ function set_url(url) {
 const switchs = document.querySelectorAll('.switch input[type="checkbox"]');
 switchs.forEach(switch_ => {
     switch_.addEventListener('click', function () {
-        switch_toggle(switch_.id, switch_.checked);
+        pywebview.api.switch_toggle(switch_.id, switch_.checked);
     });
 });
-function switch_toggle(switch_name, switch_state) {
-    pywebview.api.switch_toggle(switch_name, switch_state);
+
+// 设置
+function set_switch(id, state) {
+    switch_name = id;
+    switch_state = state;
+    const switchs = document.querySelectorAll('input[type="checkbox"]');
+    switchs.forEach(switch_ => {
+        if (switch_.id === id) {
+            switch_.checked = state;
+        }
+    });
+}
+
+function set_text(id, text) {
+    const text_ = document.getElementById(id);
+    text_.value = text;
+}
+
+function setting_save() {
+    const settings = [
+        { 'section': 'server', 'option': 'host', 'value': document.getElementById('server_host').value },
+        { 'section': 'server', 'option': 'port', 'value': document.getElementById('server_port').value },
+        { 'section': 'float', 'option': 'open', 'value': document.getElementById('float_open').checked },
+    ]
+    pywebview.api.save_setting(settings);
+    alert('保存成功\n请重新启动软件');
 }
