@@ -9,7 +9,7 @@ class FloatWindow:
         self.window: Optional[webview.Window] = None
         self.url = None
         self.float: Optional[webview.Window] = None
-        self.floatable = config.get_config('float', 'open')
+        self.floatable = config.get_config('float', 'open') == 'True'
 
     def init(self, window):
         self.window = window
