@@ -14,7 +14,7 @@ class FloatWindow:
         self.timer = None
         self.float: Optional[webview.Window] = None
         self.floatable = config.get_config('float', 'open') == 'True'
-        self.movable = None
+        self.movable = config.get_config('float', 'move') == 'True'
 
     def init(self, window):
         self.window = window

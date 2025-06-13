@@ -21,11 +21,15 @@ class Setting:
         server_address = config.get_config('server', 'host')
         server_port = config.get_config('server', 'port')
         float_open = config.get_config('float', 'open')
+        float_move = config.get_config('float', 'move')
         self.window.evaluate_js(f"set_text('server_host','{server_address}')")
         self.window.evaluate_js(f"set_text('server_port','{server_port}')")
         if float_open == 'True':
             self.window.evaluate_js("set_switch('open', true)")
             self.window.evaluate_js("set_switch('float_open', true)")
+        if float_move == 'True':
+            self.window.evaluate_js("set_switch('move', true)")
+            self.window.evaluate_js("set_switch('float_move', true)")
 
     def save_setting(self, value_json):
         for _json in value_json:

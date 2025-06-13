@@ -23,6 +23,7 @@ def create_config():
     # 浮窗
     [float]
     open = False
+    move = True
     x = 0
     y = 774\
 """)
