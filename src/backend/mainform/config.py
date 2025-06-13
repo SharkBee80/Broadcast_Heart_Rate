@@ -22,7 +22,9 @@ def create_config():
 
     # 浮窗
     [float]
-    open = True\
+    open = False
+    x = 0
+    y = 774\
 """)
     # 写入到文件
     with open(config_path, 'w', encoding='utf-8') as configfile:

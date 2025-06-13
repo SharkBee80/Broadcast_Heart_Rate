@@ -1,0 +1,19 @@
+body {
+    width: 256px;
+    height: 256px;
+    margin: 0;
+    background-color: #ffffff00;
+    position: relative;
+}
+
+.box {
+    position: absolute;
+}
+
+.pywebview-drag-region {
+    display: none;
+    z-index: 999;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+}
