@@ -1,13 +1,12 @@
 import json
-import threading
 import time
-from flask import Flask, render_template, jsonify, send_from_directory, Response
+import threading
+from typing import Optional
 from flask_cors import CORS
+from src.backend.mainform import get_path, config
+from flask import Flask, render_template, jsonify, send_from_directory, Response
 
 import logging
-
-from src.backend.mainform import get_path, config
-
 log = logging.getLogger('werkzeug')
 log.disabled = True
 
@@ -27,7 +26,7 @@ class Server:
         # r'/*' 是通配符，让本服务器所有的 URL 都允许跨域请求
         CORS(self.app, resources=r'/*')
         '''route'''
-        self.app.add_url_rule('/', 'root', self.root)
+        self.app.add_url_rule('/' and '/index', 'root', self.root)
         self.app.add_url_rule('/main', 'main', self.main)
         '''api'''
         self.app.add_url_rule('/api', 'api', self.api)
@@ -44,6 +43,7 @@ class Server:
         self.old_time = 0
         self.data_condition = threading.Condition()
 
+        self.server_thread: Optional[threading.Thread] = None
         self.run()
 
     '''route'''
@@ -91,6 +91,8 @@ class Server:
         )
 
     def html(self, filename):
+        if not filename.endswith('.html'):
+            filename += '.html'
         return send_from_directory(self.template_folder, filename)
 
     def web(self, filename):
@@ -123,12 +125,15 @@ class Server:
         return json.dumps(j)
 
     def run(self):
-        server_thread = threading.Thread(target=self.app_run, daemon=True)
-        server_thread.start()
+        self.server_thread = threading.Thread(target=self.app_run, daemon=True)
+        self.server_thread.start()
         print(f'Server started at: \n * http://{host}:{port}')
 
     def app_run(self):
         self.app.run(host, port)
+
+    def stop(self):
+        self.server_thread.join()
 
 
 if __name__ == '__main__':

@@ -1,15 +1,11 @@
 import json
 import time
-
 import webview
-from bleak import BleakScanner, BleakClient
 import asyncio
 from typing import Optional
-
-from src.backend.mainform import server
+from bleak import BleakScanner, BleakClient
 
 import logging
-
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s",
                     datefmt="%Y-%m-%d %H:%M:%S")  # 黄色
 # 心率服务UUID（标准特征值）
@@ -23,6 +19,7 @@ class Device_handle:
 
     def __init__(self):
         self.window: Optional[webview.Window] = None
+        self.server = None
 
         self._set_device = None
         self.client: Optional[BleakClient] = None
@@ -31,10 +28,9 @@ class Device_handle:
 
         self.disconnect_event: Optional[asyncio.Event] = None
 
-        self.ser = server.Server()
-
-    def init(self, window):
+    def init(self, window, server):
         self.window = window
+        self.server = server
         self.window.expose(self.refresh_devices, self.set_device, self.connect_device, self.disconnect_device)
 
     def refresh_devices(self):

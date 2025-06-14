@@ -1,7 +1,5 @@
-from typing import Optional
-
 import webview
-
+from typing import Optional
 from src.backend.mainform import get_path, config, Float_window
 
 get_path = get_path.get_path
@@ -59,3 +57,24 @@ class Setting:
             //if (x == true) {pywebview.api.reboot();}
         """
         self.window.evaluate_js(JS_)
+
+    '''
+    import subprocess
+    import sys
+    def reboot(self):
+        # 获取当前执行路径和参数
+        executable = sys.executable
+        args = sys.argv[:]
+
+        # 添加延迟确保当前进程退出后再启动新进程
+        self.window.destroy()  # 关闭当前窗口
+
+        # 启动新进程
+        if sys.platform == 'win32':
+            subprocess.Popen([executable] + args, creationflags=subprocess.CREATE_NEW_CONSOLE)
+        else:
+            subprocess.Popen([executable] + args)
+
+        # 退出当前进程
+        sys.exit(0)
+    '''
