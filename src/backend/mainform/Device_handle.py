@@ -129,7 +129,7 @@ class Device_handle:
             #
 
             print(f"{time.strftime('%Y-%m-%d %H:%M:%S', time.localtime())} - 心率: {self.heart_rate} bpm")
-            self.ser.set_rate(self.heart_rate)
+            self.server.set_rate(self.heart_rate)
 
         # 查找心率特征值
         services = self.client.services

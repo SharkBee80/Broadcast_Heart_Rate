@@ -22,4 +22,4 @@ if __name__ == '__main__':
 
     window.events.closed += api.on_closed
 
-    webview.start(debug=True, gui='edgechromium')  # type: ignore
+    webview.start(debug=False, gui='edgechromium')  # type: ignore
