@@ -1,4 +1,4 @@
-bleak~=0.22.3
-pywebview~=5.4
-Flask~=3.1.0
-flask-cors~=6.0.0
+Flask
+flask-cors
+pywebview
+bleak
