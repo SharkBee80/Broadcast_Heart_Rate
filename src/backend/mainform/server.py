@@ -26,17 +26,16 @@ class Server:
         # r'/*' 是通配符，让本服务器所有的 URL 都允许跨域请求
         CORS(self.app, resources=r'/*')
         '''route'''
-        self.app.add_url_rule('/' and '/index', 'root', self.root)
-        self.app.add_url_rule('/main', 'main', self.main)
+        self.app.add_url_rule('/', 'root', self.root)
         '''api'''
         self.app.add_url_rule('/api', 'api', self.api)
-
+        '''sse'''
         self.app.add_url_rule('/sse1', 'sse1', self.sse1)
         self.app.add_url_rule('/sse2', 'sse2', self.sse2)
         '''path'''
         self.app.add_url_rule('/<path:filename>', 'html', self.html)
         self.app.add_url_rule('/web/<path:filename>', 'web', self.web)
-
+        '''404'''
         self.app.register_error_handler(404, self.page_not_found)
 
         self.rate = None
@@ -99,7 +98,8 @@ class Server:
         return send_from_directory(self.web_folder, filename)
 
     def page_not_found(self, error):
-        return jsonify({'error': '404'}), 404
+        # return jsonify({'error': '404'}), 404
+        return render_template('404.html'), 404
 
     '''function'''
 
