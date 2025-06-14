@@ -6,6 +6,7 @@ from typing import Optional
 from bleak import BleakScanner, BleakClient
 
 import logging
+
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s",
                     datefmt="%Y-%m-%d %H:%M:%S")  # 黄色
 # 心率服务UUID（标准特征值）
@@ -54,7 +55,7 @@ class Device_handle:
                 if d.name is not None and d.name.strip()
             ]
             print(f"发现 {len(devices_data)} 个设备")
-            print(devices_data)
+            logging.info(f"设备列表: {devices_data}")
             self.window.evaluate_js(f"update_devices({json.dumps(devices_data, ensure_ascii=False)})")
         except Exception as e:
             logging.warning(f"扫描时发生错误: {e}")
@@ -63,7 +64,7 @@ class Device_handle:
 
     def set_device(self, device):
         self._set_device = device
-        print(device)
+        logging.info(f"{device}")
 
     def connect_device(self):
         loop = asyncio.new_event_loop()
@@ -178,7 +179,7 @@ class Device_handle:
                 # 主动断开连接
                 try:
                     logging.info('正在断开蓝牙连接...')
-                    await asyncio.wait_for(self.client.disconnect(),  timeout=5)
+                    await asyncio.wait_for(self.client.disconnect(), timeout=5)
                     logging.info('已成功断开蓝牙连接')
                 except asyncio.TimeoutError:
                     logging.warning('断开连接超时，尝试强制清理')
