@@ -5,7 +5,7 @@ from src.backend.mainform import WebUI_api, config
 port = config.get_config('server', 'port') or 25432
 
 if __name__ == '__main__':
-    # webview.logger.disabled = True
+    webview.logger.disabled = True
     webview.settings['OPEN_DEVTOOLS_IN_DEBUG'] = False
     # 创建窗口并加载 HTML 页面
     window = webview.create_window(
@@ -20,4 +20,4 @@ if __name__ == '__main__':
 
     window.events.closed += api.on_closed
 
-    webview.start(debug=True, gui='edgechromium')
+    webview.start(debug=False, gui='edgechromium')

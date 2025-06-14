@@ -95,10 +95,6 @@
                             <label for="switch-box">移动</label>
                         </div>
                         <div class="switch">
-                            <input class="switch-box" type="checkbox" id="click">
-                            <label for="switch-box">点击</label>
-                        </div>
-                        <div class="switch">
                             <input class="switch-box" type="checkbox" id="transparent">
                             <label for="switch-box">透明</label>
                         </div>
@@ -112,6 +108,7 @@
                     <div class="box_">
                         <h1>设置</h1>
                         <div class="btn">
+                            <button onclick="setting_reset()">恢复默认</button>
                             <button onclick="setting_save()">保存</button>
                         </div>
                     </div>
@@ -129,12 +126,15 @@
                         <h3>浮窗</h3>
                         <div class="box3 switch">
                             <input class="switch-box" type="checkbox" id="float_open">
-                            <label for="switch-box">悬浮窗</label>
+                            <label for="switch-box">悬浮窗开关</label>
                         </div>
                         <div class="box3 switch">
                             <input class="switch-box" type="checkbox" id="float_move">
                             <label for="switch-box">悬浮窗移动</label>
                         </div>
+                        <div class="box3 switch">
+                            <input class="switch-box" type="checkbox" id="float_transparent">
+                            <label for="switch-box">悬浮窗透明</label>
                         </div>
                     </div>
                 </div>

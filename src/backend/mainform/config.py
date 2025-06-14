@@ -24,6 +24,7 @@ def create_config():
     [float]
     open = False
     move = True
+    transparent = True
     x = 0
     y = 774\
 """)

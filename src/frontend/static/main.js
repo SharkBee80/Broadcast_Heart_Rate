@@ -347,9 +347,17 @@ function set_text(id, text) {
 
 function setting_save() {
     const settings = [
+        //server
         { 'section': 'server', 'option': 'host', 'value': document.getElementById('server_host').value },
         { 'section': 'server', 'option': 'port', 'value': document.getElementById('server_port').value },
+        //float
         { 'section': 'float', 'option': 'open', 'value': document.getElementById('float_open').checked },
+        { 'section': 'float', 'option': 'move', 'value': document.getElementById('float_move').checked },
+        { 'section': 'float', 'option': 'transparent', 'value': document.getElementById('float_transparent').checked },
     ]
     pywebview.api.save_setting(settings);
+}
+
+function setting_reset() {
+    pywebview.api.reset_setting();
 }

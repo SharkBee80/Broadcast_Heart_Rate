@@ -15,6 +15,7 @@ class FloatWindow:
         self.float: Optional[webview.Window] = None
         self.floatable = config.get_config('float', 'open') == 'True'
         self.movable = config.get_config('float', 'move') == 'True'
+        self.transparent = config.get_config('float', 'transparent') == 'True'
 
     def init(self, window):
         self.window = window
@@ -38,7 +39,7 @@ class FloatWindow:
                 url=self.url,
                 frameless=True,
                 on_top=True,
-                transparent=not self.movable,
+                transparent=not self.movable and self.transparent,
             )
             self.float.events.moved += self.on_move
             self.float.events.closed += self.on_closed
@@ -82,4 +83,9 @@ class FloatWindow:
                 self.movable = True
             else:
                 self.movable = False
+        if switch_name == 'transparent':
+            if switch_state:
+                self.transparent = True
+            else:
+                self.transparent = False
         self.open()

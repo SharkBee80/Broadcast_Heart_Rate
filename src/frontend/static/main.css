@@ -330,6 +330,7 @@ canvas#heartRateChart {
     display: flex;
     justify-content: flex-end;
     width: 30%;
+    gap: 10px;
 }
 
 .set .box_ .btn button {
