@@ -134,28 +134,10 @@ function ButtonState(id, state, text) {
 
 // 心率
 let heart_rate_status = false;
-let heart_rate;
-let heart_rate_time = 0;
-let heart_rate_interval;
 
 let eventSource;
 let eventSourceTimeout;
-/*
-function startHeartRate(state) {
-    if (typeof state !== 'boolean') {
-        console.warn('Invalid state type, expected boolean');
-        return;
-    }
-    heart_rate_status = state;
-    if (heart_rate_interval) {
-        clearInterval(heart_rate_interval);
-        heart_rate_interval = null;
-    }
-    if (heart_rate_status) {
-        heart_rate_interval = setInterval(fetch_heart_rate, 1000); // 每秒更新一次
-    }
-}
-*/
+
 
 function startHeartRate(state) {
     if (typeof state !== 'boolean') {
@@ -181,38 +163,6 @@ function startHeartRate(state) {
                 }
             }, 3000);
         }
-    }
-}
-
-function getHeartRate(rate) {
-    heart_rate = rate;
-    heart_rate_time = Date.now();
-}
-
-//api
-
-async function fetch_heart_rate() {
-    let timeoutId;
-    try {
-        const controller = new AbortController();
-        timeoutId = setTimeout(() => controller.abort(), 500);
-
-        const response = await fetch('/api', {
-            signal: controller.signal
-        });
-
-        clearTimeout(timeoutId);
-
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-
-        const data = await response.json();
-        //{'rate':72}
-        const rate = JSON.parse(data).rate;
-        updateChart(rate);
-    } catch (error) {
-        console.error('Failed to fetch rate data:', error);
     }
 }
 
