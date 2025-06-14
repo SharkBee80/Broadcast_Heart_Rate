@@ -19,6 +19,10 @@ def create_config():
     [server]
     host = 0.0.0.0
     port = 25432
+    
+    # 启动时
+    [start]
+    refresh = True
 
     # 浮窗
     [float]

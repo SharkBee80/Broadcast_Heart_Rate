@@ -23,7 +23,12 @@ class Setting:
         server_port = config.get_config('server', 'port')
         self.window.evaluate_js(f"set_text('server_host','{server_address}')")
         self.window.evaluate_js(f"set_text('server_port','{server_port}')")
-        #  float
+        # start
+        start_refresh = config.get_config('start', 'refresh')
+        if start_refresh == 'True':
+            self.window.evaluate_js("refresh_devices()")
+            self.window.evaluate_js("set_switch('start_refresh', true)")
+        # float
         float_open = config.get_config('float', 'open')
         float_move = config.get_config('float', 'move')
         float_transparent = config.get_config('float', 'transparent')

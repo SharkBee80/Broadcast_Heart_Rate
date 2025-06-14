@@ -308,6 +308,8 @@ function setting_save() {
         //server
         { 'section': 'server', 'option': 'host', 'value': document.getElementById('server_host').value },
         { 'section': 'server', 'option': 'port', 'value': document.getElementById('server_port').value },
+        //start
+        { 'section': 'start', 'option': 'refresh', 'value': document.getElementById('start_refresh').checked },
         //float
         { 'section': 'float', 'option': 'open', 'value': document.getElementById('float_open').checked },
         { 'section': 'float', 'option': 'move', 'value': document.getElementById('float_move').checked },
