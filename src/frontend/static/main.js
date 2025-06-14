@@ -41,8 +41,8 @@ choiceAs.forEach(function (a, index) {
 /* 初始 */
 onload = function () {
     let device_data = [
-        { 'name': 'iQOO WATCH 047', 'address': '88:54:8E:D9:50:47' },
-        //{ 'name': 'EXAMPLE BLE', 'address': '12:34:56:78:90:AB' },
+        { 'name': '点击刷新以开始', 'address': '>>>>' },
+        //{ 'name': 'iQOO WATCH 047', 'address': '88:54:8E:D9:50:47' },
         //{ 'name': 'AAAAABBBBBCCCCCDDDDDEEEEEFFFFFGGGGG', 'address': 'XX:XX:XX:XX:XX:XX' },
         //{ 'name': 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA', 'address': 'AA:AA:AA:AA:AA:AA' },
     ]
@@ -86,7 +86,15 @@ function update_devices(devices) {
     });
 }
 
+function validateMAC(address) {
+    const macRegex = /^([0-9A-Fa-f]{2}[:]){5}([0-9A-Fa-f]{2})$/;
+    return macRegex.test(address);
+}
+
 function set_device(device) {
+    if (!validateMAC(device.address)) {
+        return;
+    }
     pywebview.api.set_device(device);
     selete_device = device;
 }
