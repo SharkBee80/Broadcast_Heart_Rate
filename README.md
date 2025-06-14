@@ -9,11 +9,24 @@
 
 ## 图片
 <div>
-    <img alt="img.png" height="256" src="files/1.png"/>
-    <img alt="img.png" height="256" src="files/2.png"/>
-    <img alt="img.png" height="256" src="files/3.png"/>
-    <img alt="img.png" height="256" src="files/obs.png">
+    <img alt="img.png" height="170" src="files/0.png"/>
+    <img alt="img.png" height="170" src="files/1.png"/>
+    <img alt="img.png" height="170" src="files/2.png"/>
+    <img alt="img.png" height="170" src="files/3.png"/>
+    <img alt="img.png" height="170" src="files/4.png"/>
+    <img alt="img.png" height="170" src="files/5.png"/>
+    <img alt="img.png" height="170" src="files/3-1.png">
+    <img alt="img.png" height="170" src="files/obs.png">
 </div>
+
+## 缺陷
+1. 悬浮窗无法设置透明、缩放
+2. 要修改悬浮窗内容需自行打包
+3. UI
+4. ……
+
+## 使用
+* 自行摸索
 
 ## 安装
 ### pyinstaller
@@ -38,5 +51,5 @@ pyinstaller -F -w --clean --add-data="src;src" --name HeartRate -i heartrate.ico
 ## [LICENSE](LICENSE)
 * [GPL-3.0](https://opensource.org/license/gpl-3-0)
 <div>
-    <img width="512" src="files/licenses.png">
+    <img width="170" src="files/licenses.png">
 </div>
