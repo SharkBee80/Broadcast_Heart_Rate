@@ -73,7 +73,9 @@ function update_devices(devices) {
     }
     devices.forEach(device => {
         let li = document.createElement('li');
-        li.innerText = `${device.name} - ${device.address}`;
+        let device_rssi;
+        if (!device.rssi) device_rssi = ''; else device_rssi = `[${device.rssi}]`;
+        li.innerText = `${device.name} - ${device.address} ${device_rssi}`;
         li.addEventListener('click', function () {
             let choiceli = document.querySelectorAll('#device-list li');
             choiceli.forEach(item => {

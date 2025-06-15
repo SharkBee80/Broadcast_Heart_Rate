@@ -50,10 +50,15 @@ class Device_handle:
             logging.info("正在扫描蓝牙设备...")
             devices = await BleakScanner.discover()
             devices_data = [
-                {'name': d.name, 'address': d.address}
+                {'name': d.name, 'address': d.address, 'rssi': d.rssi}
                 for d in devices
                 if d.name is not None and d.name.strip()
             ]
+            devices_data.sort(key=lambda x: x['rssi'] if x['rssi'] is not None else -999, reverse=True)
+            # 排序后统一转换为字符串
+            for device in devices_data:
+                device['rssi'] = f"{device['rssi']}dBm"  # type: ignore
+
             print(f"发现 {len(devices_data)} 个设备")
             logging.info(f"设备列表: {devices_data}")
             self.window.evaluate_js(f"update_devices({json.dumps(devices_data, ensure_ascii=False)})")
