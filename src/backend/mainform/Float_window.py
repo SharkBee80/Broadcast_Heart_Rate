@@ -40,6 +40,7 @@ class FloatWindow:
                 frameless=True,
                 on_top=True,
                 transparent=not self.movable and self.transparent,
+                shadow=False
             )
             self.float.events.moved += self.on_move
             self.float.events.closed += self.on_closed
@@ -51,6 +52,7 @@ class FloatWindow:
     def after_load(self):
         if self.movable:
             self.float.evaluate_js("document.querySelector('.pywebview-drag-region').style.display = 'block'")
+
 
     def on_move(self):
         # 取消之前的定时器
