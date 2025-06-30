@@ -8,7 +8,7 @@ def get_program_name():
     return str(program_name)
 
 
-def get_path(relative_path: str, output_type: str = None, config_dir_name: str = None, use_mei_pass: bool = False):
+def get_path(relative_path: str, output_type: str = "str", config_dir_name: str = None, use_mei_pass: bool = True):
     """
     获取相对于 base_path 的路径。
 
@@ -20,7 +20,7 @@ def get_path(relative_path: str, output_type: str = None, config_dir_name: str =
     """
     if use_mei_pass:
         try:
-            base_path = sys._MEIPASS
+            base_path = Path(sys._MEIPASS)
         except AttributeError:
             base_path = Path(sys.argv[0]).parent.resolve()
     else:
@@ -46,6 +46,7 @@ def get_path(relative_path: str, output_type: str = None, config_dir_name: str =
     except (PermissionError, OSError) as e:
         raise RuntimeError(f"无法解析路径: {e}") from e
 
+    print(out_path)
     if output_type == "str":
         return str(out_path)
     else:

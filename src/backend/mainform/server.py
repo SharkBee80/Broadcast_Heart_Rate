@@ -7,6 +7,7 @@ from src.backend.mainform import get_path, config
 from flask import Flask, render_template, jsonify, send_from_directory, Response
 
 import logging
+
 log = logging.getLogger('werkzeug')
 log.disabled = True
 
