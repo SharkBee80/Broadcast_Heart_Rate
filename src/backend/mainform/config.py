@@ -104,5 +104,5 @@ if __name__ == '__main__':
     print(f"Host: {host}")
     print(f"Port: {port}")
 else:
-    config_path = get_path('src/backend/config.ini')
+    config_path = get_path('config.ini')
     init_config()

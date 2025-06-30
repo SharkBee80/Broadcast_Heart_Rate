@@ -1,8 +1,7 @@
 import webview
 from typing import Optional
-from src.backend.mainform import get_path, config, Float_window
+from src.backend.mainform import config, Float_window
 
-get_path = get_path.get_path
 float_window = Float_window.FloatWindow()
 cfg = config.WriteConfig()
 
