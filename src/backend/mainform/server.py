@@ -12,8 +12,9 @@ log = logging.getLogger('werkzeug')
 log.disabled = True
 
 get_path = get_path.get_path
-host = config.get_config('server', 'host') or '127.0.0.1'
-port = config.get_config('server', 'port') or 25432
+cfg = config.config(get_path('config.ini', use_mei_pass=False))
+host = cfg.read_config('server', 'host') or '127.0.0.1'
+port = cfg.read_config('server', 'port') or 25432
 
 
 class Server:

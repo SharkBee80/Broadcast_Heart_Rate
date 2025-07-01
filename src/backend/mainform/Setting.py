@@ -1,9 +1,10 @@
 import webview
 from typing import Optional
-from src.backend.mainform import config, Float_window
+from src.backend.mainform import get_path, config, Float_window
 
 float_window = Float_window.FloatWindow()
-cfg = config.WriteConfig()
+path = get_path.get_path('config.ini', use_mei_pass=False)
+cfg = config.config(path)
 
 
 class Setting:
@@ -16,19 +17,19 @@ class Setting:
 
     def load_setting(self):
         # server
-        server_address = config.get_config('server', 'host')
-        server_port = config.get_config('server', 'port')
+        server_address = cfg.read_config('server', 'host') or '127.0.0.1'
+        server_port = cfg.read_config('server', 'port') or 25432
         self.window.evaluate_js(f"set_text('server_host','{server_address}')")
         self.window.evaluate_js(f"set_text('server_port','{server_port}')")
         # start
-        start_refresh = config.get_config('start', 'refresh')
+        start_refresh = cfg.read_config('start', 'refresh')
         if start_refresh == 'True':
             self.window.evaluate_js("refresh_devices()")
             self.window.evaluate_js("set_switch('start_refresh', true)")
         # float
-        float_open = config.get_config('float', 'open')
-        float_move = config.get_config('float', 'move')
-        float_transparent = config.get_config('float', 'transparent')
+        float_open = cfg.read_config('float', 'open')
+        float_move = cfg.read_config('float', 'move')
+        float_transparent = cfg.read_config('float', 'transparent')
         if float_open == 'True':
             self.window.evaluate_js("set_switch('open', true)")
             self.window.evaluate_js("set_switch('float_open', true)")
@@ -40,13 +41,11 @@ class Setting:
             self.window.evaluate_js("set_switch('float_transparent', true)")
 
     def save_setting(self, value_json):
-        for _json in value_json:
-            # print(_json['section'], _json['option'], _json['value'])
-            cfg.set_options(_json['section'], _json['option'], _json['value'].__str__())
+        cfg.set_config(value_json)
         self.after_change()
 
     def reset_setting(self):
-        config.reset_config()
+        cfg.reset_config()
         self.after_change()
 
     def after_change(self):

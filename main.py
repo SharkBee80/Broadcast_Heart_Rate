@@ -1,13 +1,11 @@
 import webview
-from src.backend.mainform import WebUI_api, config, server
+from src.backend.mainform import WebUI_api, get_path, config, server
 
-port = config.get_config('server', 'port') or 25432
-
+path = get_path.get_path('config.ini', use_mei_pass=False)
+cfg = config.config(path)
+port = cfg.read_config('server', 'port') or 25432
 
 if __name__ == '__main__':
-    webview.logger.disabled = True
-    webview.settings['OPEN_DEVTOOLS_IN_DEBUG'] = False
-
     server = server.Server()
     # 创建窗口并加载 HTML 页面
     window = webview.create_window(
@@ -22,4 +20,4 @@ if __name__ == '__main__':
 
     window.events.closed += api.on_closed
 
-    webview.start(debug=False, gui='edgechromium')  # type: ignore
+    webview.start()

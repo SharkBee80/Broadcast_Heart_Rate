@@ -2,9 +2,10 @@ import time
 from threading import Timer
 from typing import Optional
 import webview
-from src.backend.mainform import config
+from src.backend.mainform import config, get_path
 
-cfg = config.WriteConfig()
+path = get_path.get_path('config.ini', use_mei_pass=False)
+cfg = config.config(path)
 
 
 class FloatWindow:
@@ -13,9 +14,9 @@ class FloatWindow:
         self.url = None
         self.timer = None
         self.float: Optional[webview.Window] = None
-        self.floatable = config.get_config('float', 'open') == 'True'
-        self.movable = config.get_config('float', 'move') == 'True'
-        self.transparent = config.get_config('float', 'transparent') == 'True'
+        self.floatable = cfg.read_config('float', 'open') == 'True'
+        self.movable = cfg.read_config('float', 'move') == 'True'
+        self.transparent = cfg.read_config('float', 'transparent') == 'True'
 
     def init(self, window):
         self.window = window
@@ -32,8 +33,8 @@ class FloatWindow:
                 self.float.destroy()
             self.float = webview.create_window(
                 '悬浮窗',
-                x=int(config.get_config('float', 'x')),
-                y=int(config.get_config('float', 'y')),
+                x=int(cfg.read_config('float', 'x')),
+                y=int(cfg.read_config('float', 'y')),
                 width=272,  # 256 + 16
                 height=297,  # 256 + 16 + 25
                 url=self.url,
@@ -53,7 +54,6 @@ class FloatWindow:
         if self.movable:
             self.float.evaluate_js("document.querySelector('.pywebview-drag-region').style.display = 'block'")
 
-
     def on_move(self):
         # 取消之前的定时器
         if self.timer is not None:
@@ -65,8 +65,8 @@ class FloatWindow:
         self.timer.start()
 
     def record_position(self):
-        cfg.set_options('float', 'x', self.float.x.__str__())
-        cfg.set_options('float', 'y', self.float.y.__str__())
+        cfg.write_config('float', 'x', self.float.x.__str__())
+        cfg.write_config('float', 'y', self.float.y.__str__())
         print(f"悬浮窗位置: {self.float.x}, {self.float.y}")
 
     def on_closed(self):

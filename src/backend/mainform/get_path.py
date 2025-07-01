@@ -46,7 +46,6 @@ def get_path(relative_path: str, output_type: str = "str", config_dir_name: str 
     except (PermissionError, OSError) as e:
         raise RuntimeError(f"无法解析路径: {e}") from e
 
-    print(out_path)
     if output_type == "str":
         return str(out_path)
     else:
