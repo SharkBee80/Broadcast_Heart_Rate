@@ -23,8 +23,8 @@ choiceAs.forEach(function (a, index) {
     a.addEventListener('click', function () {
         choiceAs.forEach(function (link) {
             link.style.fontSize = '';
-            link.style.backgroundColor = '#eee';
-            link.style.padding = '0';
+            link.style.backgroundColor = '';
+            link.style.padding = '';
         });
         this.style.fontSize = '35px';
         this.style.backgroundColor = 'gainsboro';

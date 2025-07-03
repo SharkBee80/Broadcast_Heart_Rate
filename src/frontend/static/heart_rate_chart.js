@@ -6,7 +6,7 @@ const currentRateSpan = document.getElementById('heart-rate');
 // 初始化数据
 let heartRateData = [];
 let labels = [];
-const maxDataPoints = 32; // 图表上显示的最大数据点数
+const maxDataPoints = 16; // 图表上显示的最大数据点数
 
 let updateInterval;
 let isSimulating = false;
@@ -38,13 +38,13 @@ const heartRateChart = new Chart(ctx, {
                 suggestedMin: 40,
                 suggestedMax: 120,
                 title: {
-                    display: true,
+                    display: false,
                     text: '心率 (BPM)'
                 }
             },
             x: {
                 title: {
-                    display: true,
+                    display: false,
                     text: '时间'
                 }
             }

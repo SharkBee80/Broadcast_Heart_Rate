@@ -13,7 +13,8 @@ if __name__ == '__main__':
         url=f'http://127.0.0.1:{port}/main',
         width=816,  # 800 + 16
         height=642,  # 600 + 28 +16
-        resizable=False
+        resizable=True,
+        min_size=(450 + 16, 300 + 44),
     )
 
     api = WebUI_api.WebUI_api(window, server)

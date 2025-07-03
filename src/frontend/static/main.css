@@ -8,24 +8,44 @@
 }
 
 html {
-    height: 600px;
-    width: 800px;
+    height: 100%;
+    width: 100%;
     overflow: hidden;
+}
+
+::-webkit-scrollbar {
+    /*height: 28px !important;*/
+    /*width: 8px !important;*/
+    width: 8px !important;
+}
+
+/* 定义了滚动条滑块的样式 */
+::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    border-style: dashed;
+    background-color: rgba(129, 129, 129, 0.4);
+    border-color: #e2242400;
+    border-width: 1.5px;
+    background-clip: padding-box;
+}
+
+button {
+    white-space: nowrap;
 }
 
 .choice-box {
     display: flex;
     position: relative;
-    width: 800px;
-    height: 600px;
+    width: 100vw;
+    height: 100vh;
     /*margin: 5% auto;*/
-    justify-content: space-around;
+    justify-content: space-between;
 }
 
 /* 选项卡 */
 .choice {
     float: left;
-    width: 16%;
+    width: calc(18% - 5px);
     height: 100%;
     display: flex;
     flex-wrap: nowrap;
@@ -40,6 +60,13 @@ html {
     margin: 0;
     /*border: #000 1px solid;*/
     height: inherit;
+    font-size: 22px;
+}
+
+.choice li:hover {
+    font-size: 30px;
+    background-color: gainsboro;
+    transition: all 0.2s linear;
 }
 
 .choice li a {
@@ -49,7 +76,6 @@ html {
     text-align: center;
     align-items: center;
     justify-content: center;
-    font-size: 22px;
     color: #000;
     transition: all 0.2s linear;
     cursor: pointer;
@@ -81,7 +107,7 @@ html {
 }
 
 .choice-con .choice-con-li .bg-f {
-    line-height: 500px;
+    line-height: 100vh;
     text-align: center;
     font-size: 28px;
     color: rgba(0, 0, 0, 0.25);
@@ -168,8 +194,11 @@ html {
 
 canvas#heartRateChart {
     position: absolute;
-    bottom: 0;
-    margin-bottom: 2%;
+    bottom: calc((100vh * 0.82 * 0.98 * 0.98) / 2);
+    left: 50%;
+    transform: translate(-50%, 50%);
+    width: calc(100vw * 0.82 * 0.98 * 0.98) !important;
+    height: 75vh !important;
 }
 
 /* 页面 */
@@ -334,7 +363,6 @@ canvas#heartRateChart {
 }
 
 .set .box_ .btn button {
-    width: inherit;
     min-width: 40%;
 }
 
