@@ -339,8 +339,6 @@ function setting_save() {
         { 'section': 'start', 'option': 'refresh', 'value': document.getElementById('start_refresh').checked },
         //float
         { 'section': 'float', 'option': 'open', 'value': document.getElementById('float_open').checked },
-        { 'section': 'float', 'option': 'move', 'value': document.getElementById('float_move').checked },
-        { 'section': 'float', 'option': 'transparent', 'value': document.getElementById('float_transparent').checked },
     ]
     pywebview.api.save_setting(settings);
 }

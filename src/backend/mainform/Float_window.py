@@ -85,9 +85,11 @@ class FloatWindow:
                 self.movable = True
             else:
                 self.movable = False
+            cfg.write_config('float', 'move', self.movable)
         if switch_name == 'transparent':
             if switch_state:
                 self.transparent = True
             else:
                 self.transparent = False
+            cfg.write_config('float', 'transparent', self.transparent)
         self.open()

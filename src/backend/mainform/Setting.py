@@ -35,10 +35,8 @@ class Setting:
             self.window.evaluate_js("set_switch('float_open', true)")
         if float_move == 'True':
             self.window.evaluate_js("set_switch('move', true)")
-            self.window.evaluate_js("set_switch('float_move', true)")
         if float_transparent == 'True':
             self.window.evaluate_js("set_switch('transparent', true)")
-            self.window.evaluate_js("set_switch('float_transparent', true)")
 
     def save_setting(self, value_json):
         cfg.set_config(value_json)
