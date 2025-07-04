@@ -8,27 +8,29 @@ def get_program_name():
     return str(program_name)
 
 
-def get_path(relative_path: str, output_type: str = "str", config_dir_name: str = None, use_mei_pass: bool = True):
+def get_path(relative_path: str, output_type: str = "str", config_dir: str = "", use_mei_pass: bool = True,
+             create_base_dir: bool = True):
     """
     获取相对于 base_path 的路径。
 
     :param relative_path: 相对路径字符串
     :param output_type: "str" or Path
-    :param config_dir_name: 配置文件夹（用于打包环境,配置文件）
+    :param config_dir: 配置文件夹（用于打包环境,配置文件）
     :param use_mei_pass: 是否强制使用 sys._MEIPASS（用于打包环境,temp文件）
+    :param create_base_dir: 新建基础文件夹
     :return: 组合后的绝对路径
     """
     if use_mei_pass:
         try:
             base_path = Path(sys._MEIPASS)
         except AttributeError:
-            base_path = Path(sys.argv[0]).parent.resolve()
+            base_path = Path(sys.argv[0]).parent.resolve() / config_dir
     else:
         if getattr(sys, 'frozen', False):  # 打包后
-            config_dir_name = config_dir_name or get_program_name() + "_config"
-            base_path = Path(sys.executable).parent / config_dir_name  # exe所在目录
+            config_dir = config_dir or get_program_name() + "_config"
+            base_path = Path(sys.executable).parent / config_dir  # exe所在目录
             created = False
-            if not base_path.exists():
+            if not base_path.exists() and create_base_dir:
                 base_path.mkdir(parents=True, exist_ok=True)
                 created = True
             descript = f".这里是{get_program_name()}的配置文件"
@@ -39,7 +41,7 @@ def get_path(relative_path: str, output_type: str = "str", config_dir_name: str 
                 except (IOError, OSError) as e:
                     print(f"无法创建配置文件: {e}")
         else:
-            base_path = Path(sys.argv[0]).parent.resolve()
+            base_path = Path(sys.argv[0]).parent.resolve() / config_dir
 
     try:
         out_path = (base_path / relative_path).resolve(strict=False)
