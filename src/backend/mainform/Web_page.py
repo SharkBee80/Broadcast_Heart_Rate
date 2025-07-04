@@ -5,7 +5,7 @@ from src.backend.mainform.get_path import get_path
 
 temper = get_path("src/frontend/web")
 directory = get_path("", config_dir="web", use_mei_pass=False, create_base_dir=False)
-print(directory)
+
 if os.path.exists(directory):
     folder_path = os.listdir(directory)
 else:
