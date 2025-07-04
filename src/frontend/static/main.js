@@ -7,7 +7,7 @@ let choiceLis = choice.querySelectorAll('li');
 choiceLis.forEach(function (li) {
     li.addEventListener('click', function () {
         if (choice1) {
-            choice1.style.display = 'none';
+            choice1.style.display = '';
         }
         let aHref = this.querySelector('a').getAttribute('class');
         let contID = aHref.slice(0);
@@ -196,11 +196,13 @@ function set_html_files(files) {
     createCards(files);
 }
 
+const container = document.getElementById('card-container');
+let cards_length = 0;
 function createCards(items) {
-    const container = document.getElementById('card-container');
     container.innerHTML = '';
 
     // 为每个项目创建卡片
+    cards_length = items.length
     items.forEach(item => {
         const host = window.location.origin; //  获取当前页面的域名
         const url = host + '/web/' + item.html;
@@ -208,7 +210,7 @@ function createCards(items) {
 
         // 创建卡片元素
         const card = document.createElement('div');
-        card.className = 'square-card';
+        card.className = 'card';
 
         // 图片部分
         const imageDiv = document.createElement('div');
@@ -220,7 +222,7 @@ function createCards(items) {
         imageDiv.appendChild(img);
 
         imageDiv.addEventListener('click', function () {
-            const cards = container.querySelectorAll('.square-card')
+            const cards = container.querySelectorAll('.card')
             cards.forEach(item => {
                 item.style.outline = '';
             });
@@ -266,15 +268,38 @@ function createCards(items) {
     });
 
     // 填充空白
-    if (items.length % 5 !== 0) {
-        for (let i = 0; i < 5 - items.length % 5; i++) {
-            let card = document.createElement('div');
-            card.classList.add('square-card');
-            //card.style.boxShadow = '0 0 0 rgba(0, 0, 0, 0)';
-            container.appendChild(card);
-        }
-    }
+    format_card();
 }
+
+let cards_fake = 0;
+function format_card() {
+    const container_clientWidth = window.outerWidth * 0.82 * 0.98;
+    const eachline = Math.floor(container_clientWidth / (107 + 2 + 8));
+    const remainder = cards_length % eachline;
+
+    if ((remainder === 0 ? 0 : eachline - remainder) === cards_fake) return;
+
+    cards_fake = remainder === 0 ? 0 : eachline - remainder;
+
+    const fake_cards = container.querySelectorAll('.fake_card');
+    if (fake_cards.length > 0) {
+        fake_cards.forEach(fake_card => {
+            fake_card.remove();
+        });
+    };
+    if (cards_fake == 0) return;
+    for (let i = 0; i < cards_fake; i++) {
+        const card = document.createElement('div');
+        card.className = 'card fake_card';
+        //card.style.boxShadow = '0 0 0 rgba(0, 0, 0, 0)';
+        container.appendChild(card);
+    };
+};
+
+// onresize
+window.onresize = () => {
+    format_card();
+};
 
 // 浮窗
 function set_url(url) {

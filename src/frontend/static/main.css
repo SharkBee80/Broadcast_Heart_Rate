@@ -118,11 +118,14 @@ button {
 
 /* 设备 */
 .box .box2 {
-    flex: 1;
-    display: inline-flex;
-    width: 100%;
+    padding: 4px;
+    width: calc(100% - 8px);
     height: 100%;
     border: #000 1px solid;
+}
+
+.device .box2 {
+    display: inline-flex;
 }
 
 #device-list {
@@ -141,12 +144,14 @@ button {
 #device-list li {
     display: block;
     cursor: pointer;
-    margin: 1%;
+    margin: 5px 2px;
     word-wrap: break-word;
+    border: #00000000 1px solid;
 }
 
 #device-list li:hover {
     background-color: #ccc;
+    border: #000 1px solid;
 }
 
 .device .box2 .btn-box {
@@ -205,15 +210,15 @@ canvas#heartRateChart {
 .page .box2 {
     display: flex;
     flex-wrap: wrap;
-    gap: 10px 20px;
+    row-gap: 10px;
     overflow-y: auto;
     align-content: flex-start;
     z-index: 0;
     position: relative;
-    justify-content: space-evenly;
+    justify-content: space-around;
 }
 
-.square-card {
+.card {
     width: 103px;
     /* 宽109 %5 */
     height: 128px;
