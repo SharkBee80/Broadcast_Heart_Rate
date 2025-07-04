@@ -48,10 +48,10 @@ class Device_handle:
         try:
             self.window.evaluate_js("ButtonState('refresh_devices',false,'刷新中...')")
             logging.info("正在扫描蓝牙设备...")
-            devices = await BleakScanner.discover()
+            devices_with_adv = await BleakScanner.discover(return_adv=True)
             devices_data = [
-                {'name': d.name, 'address': d.address, 'rssi': d.rssi}
-                for d in devices
+                {'name': d.name, 'address': d.address, 'rssi': adv.rssi}
+                for d, adv in devices_with_adv.values()
                 if d.name is not None and d.name.strip()
             ]
             devices_data.sort(key=lambda x: x['rssi'] if x['rssi'] is not None else -999, reverse=True)
@@ -184,7 +184,8 @@ class Device_handle:
                 # 主动断开连接
                 try:
                     logging.info('正在断开蓝牙连接...')
-                    await asyncio.wait_for(self.client.disconnect(), timeout=5)
+                    await self.client.disconnect()
+                    # await asyncio.wait_for(self.client.disconnect(), timeout=5)
                     logging.info('已成功断开蓝牙连接')
                 except asyncio.TimeoutError:
                     logging.warning('断开连接超时，尝试强制清理')
