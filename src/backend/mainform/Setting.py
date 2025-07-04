@@ -37,6 +37,16 @@ class Setting:
             self.window.evaluate_js("set_switch('move', true)")
         if float_transparent == 'True':
             self.window.evaluate_js("set_switch('transparent', true)")
+        # background
+        bg_f = cfg.read_config('other', 'bg-f')
+        if bg_f == 'True':
+            self.window.evaluate_js("set_switch('bg-f', true)")
+        else:
+            self.window.evaluate_js(r"""
+            document.querySelectorAll('.bg-f').forEach(function(item) {
+                item.style.display = 'none';
+            });
+            """)
 
     def save_setting(self, value_json):
         cfg.set_config(value_json)

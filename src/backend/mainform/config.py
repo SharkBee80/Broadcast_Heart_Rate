@@ -34,10 +34,11 @@ class config:
             {"section": "server", "option": "port", "value": "25432"},
             {"section": "start", "option": "refresh", "value": "True"},
             {"section": "float", "option": "open", "value": "False"},
-            {"section": "float", "option": "move", "value": "True"},
+            {"section": "float", "option": "move", "value": "False"},
             {"section": "float", "option": "transparent", "value": "True"},
             {"section": "float", "option": "x", "value": "0"},
             {"section": "float", "option": "y", "value": "774"},
+            {"section": "other", "option": "bg-f", "value": "True"}
         ])
 
     def _with_file(self):
