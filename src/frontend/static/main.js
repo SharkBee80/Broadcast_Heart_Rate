@@ -163,19 +163,41 @@ function startHeartRate(state) {
 
     if (heart_rate_status) {
         if (!eventSource) listen_heart_rate();
+        updateChartThread(true);
     } else {
         if (eventSource) {
-            clearTimeout(eventSourceTimeout);
+            //clearTimeout(eventSourceTimeout);
             eventSourceTimeout = setTimeout(() => {
                 if (eventSource) {
                     eventSource.close();
                     eventSource = null;
+                    updateChartThread(false);
                 }
             }, 3000);
         }
     }
 }
 
+let updateChartInterval;
+
+/**
+ * 
+ * @param {boolean} enabled 
+ */
+function updateChartThread(enabled) {
+    if (enabled) {
+        if (updateChartInterval) clearInterval(updateChartInterval);
+        updateChartInterval = setInterval(()=>{
+            updateChart(heartRate);
+        },1000);
+    } else {
+        setTimeout(()=>{
+            clearInterval(updateChartInterval);
+        },2000);
+    }
+}
+
+let heartRate = null;
 //sse
 function listen_heart_rate() {
     eventSource = new EventSource('/sse1');
@@ -183,11 +205,15 @@ function listen_heart_rate() {
     eventSource.onmessage = function (event) {
         const data = JSON.parse(event.data);
         //"{\"rate\": 71, \"time\": \"22:45:32\"}"
-        const rate = data.rate
-        updateChart(rate);
+        heartRate = data.rate
     };
     eventSource.onerror = function (error) {
         console.error('Failed to receive rate data:', error);
+        heartRate = null;
+    }
+    eventSource.close = function () {
+        console.log('Disconnected from the server');
+        heartRate = null;
     }
 }
 
