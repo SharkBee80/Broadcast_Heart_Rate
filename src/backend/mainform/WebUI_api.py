@@ -1,5 +1,6 @@
 from src.backend.mainform import Device_handle, Web_page, Float_window, Setting, timer, config, get_path
 import webview
+from typing import Optional
 
 ble = Device_handle.Device_handle()
 web = Web_page.Web_page()
@@ -15,7 +16,7 @@ resize_timer = timer.timer_(DELAY)
 class WebUI_api:
     # 提供给前端调用的方法
     def __init__(self, window, server):
-        self.window = window
+        self.window: Optional[webview.Window] = window
         self.server = server
 
         ble.init(self.window, self.server)
@@ -51,7 +52,7 @@ class WebUI_api:
                     });
                 """)
 
-        # window.events
+    # window.events
 
     def on_moved(self, x, y):
         def record_position():
