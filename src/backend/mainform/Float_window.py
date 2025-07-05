@@ -14,20 +14,22 @@ class FloatWindow:
         self.url = None
         self.timer = None
         self.float: Optional[webview.Window] = None
-        self.floatable = cfg.read_config('float', 'open') == 'True'
-        self.movable = cfg.read_config('float', 'move') == 'True'
-        self.transparent = cfg.read_config('float', 'transparent') == 'True'
+        self.switch = {
+            "open": cfg.read_config('float', 'open') == 'True',
+            "move": cfg.read_config('float', 'move') == 'True',
+            "transparent": cfg.read_config('float', 'transparent') == 'True'
+        }
 
     def init(self, window):
         self.window = window
-        self.window.expose(self.set_url, self.switch_toggle)
+        self.window.expose(self.set_url)
 
     def set_url(self, url):
         self.url = url
         self.open()
 
     def open(self):
-        if self.url and self.floatable:
+        if self.url and self.switch['open']:
             print(f"{time.strftime('%Y-%m-%d %H:%M:%S', time.localtime())} - 悬浮窗: {self.url}")
             if self.float:
                 self.float.destroy()
@@ -40,18 +42,18 @@ class FloatWindow:
                 url=self.url,
                 frameless=True,
                 on_top=True,
-                transparent=not self.movable and self.transparent,
+                transparent=not self.switch["move"] and self.switch["transparent"],
                 shadow=False
             )
             self.float.events.moved += self.on_move
             self.float.events.closed += self.on_closed
 
             self.after_load()
-        elif not self.floatable and self.float:
+        elif not self.switch['open'] and self.float:
             self.float.destroy()
 
     def after_load(self):
-        if self.movable:
+        if self.switch['move']:
             self.float.evaluate_js("document.querySelector('.pywebview-drag-region').style.display = 'block'")
 
     def on_move(self):
@@ -75,21 +77,10 @@ class FloatWindow:
             self.float = None
 
     def switch_toggle(self, switch_name, switch_state):
-        if switch_name == 'open':
-            if switch_state:
-                self.floatable = True
-            else:
-                self.floatable = False
-        if switch_name == 'move':
-            if switch_state:
-                self.movable = True
-            else:
-                self.movable = False
-            cfg.write_config('float', 'move', self.movable)
-        if switch_name == 'transparent':
-            if switch_state:
-                self.transparent = True
-            else:
-                self.transparent = False
-            cfg.write_config('float', 'transparent', self.transparent)
+        if switch_state:
+            self.switch[switch_name] = True
+        else:
+            self.switch[switch_name] = False
+        if switch_name != 'open':
+            cfg.write_config('float', switch_name, self.switch[switch_name])
         self.open()

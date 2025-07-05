@@ -17,7 +17,7 @@ class WebUI_api:
         float_window.init(self.window)
         setting.init(self.window)
 
-        self.window.expose(self.onload_init)
+        self.window.expose(self.onload_init, self.switch_toggle)
 
     def onload_init(self):
         web.set_()
@@ -27,3 +27,20 @@ class WebUI_api:
         ble.disconnect_device()
         float_window.on_closed()
         self.server.stop()
+
+    def switch_toggle(self, switch_name, switch_state):
+        if switch_name in {'open', 'move', 'transparent'}:
+            float_window.switch_toggle(switch_name, switch_state)
+        if switch_name == 'bg-f':
+            if switch_state:
+                self.window.evaluate_js(r"""
+                    document.querySelectorAll('.bg-f').forEach(function(item) {
+                        item.style.display = '';
+                    });
+                """)
+            else:
+                self.window.evaluate_js(r"""
+                    document.querySelectorAll('.bg-f').forEach(function(item) {
+                        item.style.display = 'none';
+                    });
+                """)
