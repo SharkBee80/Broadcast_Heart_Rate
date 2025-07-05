@@ -1,15 +1,38 @@
 import json
 import os
+import shutil
 
-from src.backend.mainform.get_path import get_path
+from src.backend.mainform import get_path
 
-temper = get_path("src/frontend/web")
-directory = get_path("", config_dir="web", use_mei_pass=False, create_base_dir=False)
+temper = get_path.get_path("src/frontend/web")
+directory = get_path.get_path("", config_dir="web", use_mei_pass=False, create_base_dir=False)
 
-if os.path.exists(directory):
-    folder_path = os.listdir(directory)
+
+def copy_directory_contents(src, dst):
+    if not os.path.exists(src):
+        raise FileNotFoundError(f"Source directory {src} does not exist.")
+    if not os.path.exists(dst):
+        os.makedirs(dst)
+    for item in os.listdir(src):
+        s = os.path.join(src, item)
+        d = os.path.join(dst, item)
+        if os.path.isdir(s):
+            shutil.copytree(s, d)
+        else:
+            shutil.copy2(s, d)
+
+
+if get_path.isPkg():
+    if os.path.exists(directory):
+        folder_path = os.listdir(directory)
+    elif os.path.exists(temper):
+        copy_directory_contents(temper, directory)
+        folder_path = os.listdir(directory)
+    else:
+        raise FileNotFoundError(f"Neither directory '{directory}' nor temper '{temper}' exists.")
 else:
     folder_path = os.listdir(temper)
+
 
 priority_order = ['.png', '.jpg', '.jpeg', '.webp', '.gif']
 DEFAULT_IMAGE = 'none.png'
@@ -24,11 +47,6 @@ class Web_page:
 
     def set_(self):
         self.window.evaluate_js(f"set_html_files({json.dumps(self.get_html_files())})")
-        if not os.path.exists(directory):
-            self.window.evaluate_js(r"""
-            document.querySelector('#choice-4 .bg-f').innerHTML = "在程序目录添加web文件夹来自定义"; 
-            """)
-
 
     def get_html_files(self):
         html_files = []
@@ -51,6 +69,6 @@ class Web_page:
 
 if __name__ == "__main__":
     web_page = Web_page()
-    temper = get_path("../../../src/frontend/web")
+    temper = get_path.get_path("../../../src/frontend/web")
     folder_path = os.listdir(temper)
     print(web_page.get_html_files())

@@ -20,13 +20,8 @@ def get_path(relative_path: str, output_type: str = "str", config_dir: str = "",
     :param create_base_dir: 新建基础文件夹
     :return: 组合后的绝对路径
     """
-    if use_mei_pass:
-        try:
-            base_path = Path(sys._MEIPASS)
-        except AttributeError:
-            base_path = Path(sys.argv[0]).parent.resolve() / config_dir
-    else:
-        if getattr(sys, 'frozen', False):  # 打包后
+    if isPkg():
+        if not use_mei_pass:  # 打包后
             config_dir = config_dir or get_program_name() + "_config"
             base_path = Path(sys.executable).parent / config_dir  # exe所在目录
             created = False
@@ -41,7 +36,9 @@ def get_path(relative_path: str, output_type: str = "str", config_dir: str = "",
                 except (IOError, OSError) as e:
                     print(f"无法创建配置文件: {e}")
         else:
-            base_path = Path(sys.argv[0]).parent.resolve() / config_dir
+            base_path = Path(sys._MEIPASS)
+    else:
+        base_path = Path(sys.argv[0]).parent.resolve() / config_dir
 
     try:
         out_path = (base_path / relative_path).resolve(strict=False)
@@ -52,6 +49,13 @@ def get_path(relative_path: str, output_type: str = "str", config_dir: str = "",
         return str(out_path)
     else:
         return Path(out_path)
+
+
+def isPkg() -> bool:
+    if getattr(sys, 'frozen', False):
+        return True
+    else:
+        return False
 
 
 if __name__ == "__main__":
