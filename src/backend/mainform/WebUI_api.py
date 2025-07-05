@@ -1,9 +1,15 @@
-from src.backend.mainform import Device_handle, Web_page, Float_window, Setting
+from src.backend.mainform import Device_handle, Web_page, Float_window, Setting, timer, config, get_path
+import webview
 
 ble = Device_handle.Device_handle()
 web = Web_page.Web_page()
 float_window = Float_window.FloatWindow()
 setting = Setting.Setting()
+cfg = config.config(get_path.get_path('config.ini', use_mei_pass=False))
+
+DELAY = 0.25
+move_timer = timer.timer_(DELAY)
+resize_timer = timer.timer_(DELAY)
 
 
 class WebUI_api:
@@ -44,3 +50,34 @@ class WebUI_api:
                         item.style.display = 'none';
                     });
                 """)
+
+        # window.events
+
+    def on_moved(self, x, y):
+        def record_position():
+            if x < -2000:
+                return
+            if y < -2000:
+                return
+            cfg.write_config('main', 'x', x)
+            cfg.write_config('main', 'y', y)
+
+        move_timer.task(record_position)
+
+    def on_resized(self, width, height):
+        def record_size():
+            if width < 0 or webview.screens[0].width <= width:
+                return
+            if height < 0 or webview.screens[0].height <= height:
+                return
+            cfg.write_config('main', 'width', width)
+            cfg.write_config('main', 'height', height)
+
+        resize_timer.task(record_size)
+
+    def on_maximized(self):
+        cfg.write_config('main', 'maximized', True)
+        move_timer.cancel()
+
+    def on_restored(self):
+        cfg.write_config('main', 'maximized', False)

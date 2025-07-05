@@ -2,10 +2,12 @@ import time
 from threading import Timer
 from typing import Optional
 import webview
-from src.backend.mainform import config, get_path
+from src.backend.mainform import config, get_path, timer
 
 path = get_path.get_path('config.ini', use_mei_pass=False)
 cfg = config.config(path)
+DELAY = 0.25
+move_timer = timer.timer_(DELAY)
 
 
 class FloatWindow:
@@ -57,14 +59,7 @@ class FloatWindow:
             self.float.evaluate_js("document.querySelector('.pywebview-drag-region').style.display = 'block'")
 
     def on_move(self):
-        # 取消之前的定时器
-        if self.timer is not None:
-            self.timer.cancel()
-
-        # 创建新定时器
-        delay = 0.25
-        self.timer = Timer(delay, self.record_position)
-        self.timer.start()
+        move_timer.task(self.record_position)
 
     def record_position(self):
         cfg.write_config('float', 'x', self.float.x.__str__())
